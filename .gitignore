@@ -17,3 +17,8 @@ data/transformed/
 results/cache/
 *.parquet
 wandb/
+
+# external corpora: ICNALE license prohibits redistribution; Liang et al.'s
+# repo has no LICENSE file either, so neither is committed — see
+# src/stress_test/data/non_native.py
+data/external/
