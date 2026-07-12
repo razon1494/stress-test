@@ -14,11 +14,16 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", default="data/processed")
     parser.add_argument("--hc3-per-domain", type=int, default=500)
+    parser.add_argument("--min-words", type=int, default=50)
     parser.add_argument("--holdout-generators", nargs="*", default=[])
     parser.add_argument("--holdout-domains", nargs="*", default=[])
     args = parser.parse_args()
 
     records = list(load_hc3(max_per_domain=args.hc3_per_domain))
+    # drop the WHOLE pair if either side is too short: detection on tiny texts
+    # is noise, and asymmetric filtering would break the matched-pair design
+    too_short = {r.doc_id for r in records if len(r.text.split()) < args.min_words}
+    records = [r for r in records if r.doc_id not in too_short]
     # TODO(week 2): add MAGE / RAID-sample / essay / non-native loaders here
     out = Path(args.out)
     n = write_jsonl(records, out / "clean.jsonl")

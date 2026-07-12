@@ -25,11 +25,23 @@ def _require_datasets():
 
 def load_hc3(max_per_domain: int | None = None) -> Iterator[Record]:
     """HC3: paired human/ChatGPT answers to the same questions — exactly the
-    matched-pair structure our protocol needs."""
-    datasets = _require_datasets()
-    ds = datasets.load_dataset("Hello-SimpleAI/HC3", "all", split="train")
+    matched-pair structure our protocol needs.
+
+    HC3 ships a legacy dataset script that datasets>=3 refuses to run, so we
+    read the raw all.jsonl from the HF repo instead."""
+    from huggingface_hub import hf_hub_download
+
+    path = hf_hub_download(
+        repo_id="Hello-SimpleAI/HC3", filename="all.jsonl", repo_type="dataset"
+    )
     counts: dict[str, int] = {}
-    for row in ds:
+    with open(path, encoding="utf-8") as fh:
+        rows = (json.loads(line) for line in fh if line.strip())
+        yield from _hc3_records(rows, counts, max_per_domain)
+
+
+def _hc3_records(rows, counts: dict[str, int], max_per_domain: int | None) -> Iterator[Record]:
+    for row in rows:
         domain = row.get("source", "unknown")
         if max_per_domain is not None and counts.get(domain, 0) >= max_per_domain:
             continue
