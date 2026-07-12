@@ -66,6 +66,7 @@ def main() -> None:
             labels = np.array([r.label for r in recs])
             pd.DataFrame({
                 "doc_id": [r.doc_id for r in recs], "label": labels, "score": scores,
+                "semsim": [r.meta.get("semsim") for r in recs],
             }).to_csv(out_dir / f"{detector.name}__{name}.csv", index=False)
             summary[detector.name]["conditions"][name] = evaluate_at_threshold(
                 scores, labels, threshold

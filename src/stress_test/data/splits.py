@@ -62,3 +62,15 @@ def save_manifest(manifest: dict, path: str | Path) -> None:
 def load_manifest(path: str | Path) -> dict:
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
     return payload["assignments"]
+
+
+def subsample_doc_pairs(records: list, limit: int) -> list:
+    """Deterministic doc-level subsample for laptop-scale runs: keeps
+    human/machine pairs intact and is stable across machines (hash order,
+    no RNG state)."""
+    doc_ids = sorted(
+        {r.doc_id for r in records},
+        key=lambda d: hashlib.sha256(d.encode()).hexdigest(),
+    )
+    keep = set(doc_ids[:limit])
+    return [r for r in records if r.doc_id in keep]

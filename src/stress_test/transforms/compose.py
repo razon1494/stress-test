@@ -47,6 +47,8 @@ NAMED_PIPELINES: dict[str, list[str]] = {
     "light_human_edit": ["contraction_expand", "grammar_correct"],
     # cheap adversarial stack (defeated by normalization? -> ablation)
     "unicode_attacker": ["homoglyph", "zero_width", "whitespace_noise"],
+    # depth-2 semantic laundering, light enough for a laptop GPU
+    "launder_lite": ["paraphrase_t5", "roundtrip_fr"],
     # depth-3 semantic chain for the composition-depth analysis
     "deep_launder": ["paraphrase_t5", "simplify", "formalize"],
 }

@@ -1,10 +1,11 @@
 """Stage 2: apply transforms/pipelines to TEST-split records (both classes —
-the symmetric protocol). Emits one jsonl per condition; each output row keeps
-its doc_id so downstream stages can cluster and pair.
+the symmetric protocol). Emits one jsonl per condition; each row keeps its
+doc_id for pairing and carries meta.semsim (similarity to the clean original)
+so the metrics stage can compute quality-adjusted evasion.
 
 Usage:
-  python scripts/02_apply_transforms.py --data data/processed --out data/transformed \
-      --transforms contraction_expand homoglyph --pipelines innocent_grammar_user
+  python scripts/02_apply_transforms.py --transforms paraphrase_t5 roundtrip_fr \
+      --pipelines launder_lite --limit 150
 Model-backed transforms need: pip install 'stress-test[models]'
 """
 
@@ -13,7 +14,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from stress_test.data import load_manifest
+from stress_test.data import load_manifest, subsample_doc_pairs
 from stress_test.data.sources import load_jsonl, write_jsonl
 from stress_test.transforms import REGISTRY, build_pipeline
 
@@ -24,7 +25,11 @@ def main() -> None:
     parser.add_argument("--out", default="data/transformed")
     parser.add_argument("--transforms", nargs="*", default=["contraction_expand"])
     parser.add_argument("--pipelines", nargs="*", default=[])
+    parser.add_argument("--limit", type=int, default=None,
+                        help="cap on number of test DOCS (pairs), for laptop-scale runs")
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--no-semsim", action="store_true",
+                        help="skip semantic scoring (e.g. sentence-transformers unavailable)")
     args = parser.parse_args()
 
     if any(REGISTRY.get(t) is None for t in args.transforms) or args.pipelines:
@@ -35,6 +40,10 @@ def main() -> None:
         r for r in load_jsonl(Path(args.data) / "clean.jsonl")
         if manifest.get(r.doc_id, "").startswith("test")
     ]
+    if args.limit:
+        test_records = subsample_doc_pairs(test_records, args.limit)
+        print(f"subsampled to {len(test_records)} records ({args.limit} docs)")
+
     conditions = [REGISTRY[name]() for name in args.transforms]
     conditions += [build_pipeline(name) for name in args.pipelines]
 
@@ -42,10 +51,17 @@ def main() -> None:
         out_records = []
         for record in tqdm(test_records, desc=condition.name):
             result = condition(record.text, seed=args.seed)
-            transformed = type(record)(**{**record.to_dict(), "text": result.text,
-                                          "transform": condition.name,
-                                          "meta": {**record.meta, **result.params}})
-            out_records.append(transformed)
+            out_records.append(type(record)(**{**record.to_dict(), "text": result.text,
+                                               "transform": condition.name,
+                                               "meta": {**record.meta, **result.params}}))
+        if not args.no_semsim:
+            from stress_test.semantics import semantic_similarity
+
+            sims = semantic_similarity(
+                [r.text for r in test_records], [r.text for r in out_records]
+            )
+            for record, sim in zip(out_records, sims):
+                record.meta["semsim"] = round(float(sim), 4)
         n = write_jsonl(out_records, Path(args.out) / f"{condition.name}.jsonl")
         print(f"{condition.name}: {n} records")
 

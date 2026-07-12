@@ -47,6 +47,17 @@ def test_split_proportions_roughly_correct():
     assert 0.6 < train_frac < 0.8
 
 
+def test_subsample_keeps_pairs_and_is_deterministic():
+    from stress_test.data import subsample_doc_pairs
+
+    records = _records()
+    sample = subsample_doc_pairs(records, limit=50)
+    assert len(sample) == 100  # 50 docs x (human + machine)
+    doc_ids = [r.doc_id for r in sample]
+    assert all(doc_ids.count(d) == 2 for d in set(doc_ids))
+    assert [r.doc_id for r in subsample_doc_pairs(records, 50)] == doc_ids
+
+
 def test_grouped_zscore_centers_within_group():
     values = np.array([1.0, 2.0, 3.0, 10.0, 20.0, 30.0])
     groups = np.array(["a", "a", "a", "b", "b", "b"])
