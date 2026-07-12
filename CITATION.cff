@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use STRESS-Test, please cite it."
+title: "STRESS-Test: Semantic-preserving Transformations for Robust Evaluation of Synthetic-text Screening"
+authors:
+  - family-names: Rahman
+    given-names: Arifur
+    email: rahman.arif.cse@gmail.com
+year: 2026
+license: MIT
+repository-code: "https://github.com/<your-username>/stress-test"
