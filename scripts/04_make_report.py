@@ -37,6 +37,8 @@ def main() -> None:
 
     cache = Path(args.cache)
     summary = json.loads((cache / "summary.json").read_text())
+    hardness_path = Path(args.out) / "hardness.json"
+    hardness = json.loads(hardness_path.read_text()) if hardness_path.exists() else {}
     cards, qaes_rows = {}, []
     for detector, payload in summary.items():
         conditions = payload["conditions"]
@@ -68,6 +70,12 @@ def main() -> None:
             fars = {n: c["fpr"] for n, c in conditions.items() if n != "clean"}
             worst_far = max(fars, key=fars.get)
             results["far_worst"], results["far_worst_transform"] = fars[worst_far], worst_far
+        by_condition = hardness.get(detector, {}).get("by_condition", {})
+        # prefer HCI measured under a real transform (paraphrase_t5) over clean,
+        # since collapse-on-hard-examples is most visible post-transformation
+        hci_condition = next((c for c in by_condition if c != "clean"), "clean")
+        if hci_condition in by_condition:
+            results["hci"] = by_condition[hci_condition]["hci"]
         cards[detector] = results
 
     out = Path(args.out)

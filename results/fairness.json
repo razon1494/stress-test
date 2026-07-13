@@ -35,6 +35,42 @@
       "n": 182
     }
   },
+  "stylometric_gbm__clean": {
+    "native": {
+      "point": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.01098901098901099,
+      "ci_low": 0.0,
+      "ci_high": 0.027624309392265192,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
+  "stylometric_gbm__grammar_correct": {
+    "native": {
+      "point": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.016483516483516484,
+      "ci_low": 0.0,
+      "ci_high": 0.038461538461538464,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
   "perplexity__clean": {
     "native": {
       "point": 0.0,
@@ -66,6 +102,114 @@
       "point": 0.054945054945054944,
       "ci_low": 0.026903837539196663,
       "ci_high": 0.08839779005524862,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
+  "fast_detect_gpt__clean": {
+    "native": {
+      "point": 0.0189873417721519,
+      "ci_low": 0.0,
+      "ci_high": 0.04430379746835443,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.01098901098901099,
+      "ci_low": 0.0,
+      "ci_high": 0.027624309392265192,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
+  "fast_detect_gpt__grammar_correct": {
+    "native": {
+      "point": 0.04430379746835443,
+      "ci_low": 0.012658227848101266,
+      "ci_high": 0.08227848101265822,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.04395604395604396,
+      "ci_low": 0.016483516483516484,
+      "ci_high": 0.0718232044198895,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
+  "binoculars_lite__clean": {
+    "native": {
+      "point": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.027472527472527472,
+      "ci_low": 0.005494505494505495,
+      "ci_high": 0.0546448087431694,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
+  "binoculars_lite__grammar_correct": {
+    "native": {
+      "point": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.07692307692307693,
+      "ci_low": 0.03866872078198045,
+      "ci_high": 0.11602209944751381,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
+  "roberta_openai__clean": {
+    "native": {
+      "point": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.03296703296703297,
+      "ci_low": 0.01092896174863388,
+      "ci_high": 0.060109289617486336,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
+  "roberta_openai__grammar_correct": {
+    "native": {
+      "point": 0.056962025316455694,
+      "ci_low": 0.02531645569620253,
+      "ci_high": 0.0949367088607595,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.06593406593406594,
+      "ci_low": 0.03296703296703297,
+      "ci_high": 0.1043956043956044,
       "n_clusters": 181,
       "n_boot": 2000,
       "n": 182

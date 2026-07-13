@@ -92,3 +92,10 @@ def test_fit_weights_finds_predictive_signal():
     weights = fit_weights(signals, committee_error)
     assert weights["committee_margin"] == max(weights.values())
     assert abs(sum(weights.values()) - 1.0) < 1e-9
+
+
+def test_fit_weights_falls_back_to_uniform_on_single_class():
+    n = 50
+    signals = {name: np.random.default_rng(0).random(n) for name in HardnessScorer().weights}
+    weights = fit_weights(signals, committee_error=np.zeros(n, dtype=int))
+    assert weights == HardnessScorer().weights

@@ -2,8 +2,12 @@
 
 | Detector | Clean TPR | RS | WCP | FAR (worst) | HCI |
 |---|---|---|---|---|---|
-| tfidf_logreg | 88.5% | 0.940 | 68.0% | 11.3% | nan |
-| perplexity | 93.9% | 0.551 | 46.0% | 2.7% | nan |
+| tfidf_logreg | 79.4% | 0.941 | 58.0% | 9.3% | -0.077 |
+| stylometric_gbm | 65.3% | 0.871 | 49.3% | 5.3% | -0.154 |
+| perplexity | 94.3% | 0.564 | 49.3% | 3.2% | 0.000 |
+| fast_detect_gpt | 96.6% | 0.692 | 38.7% | 3.3% | 0.067 |
+| binoculars_lite | 98.9% | 0.603 | 38.0% | 3.3% | 0.000 |
+| roberta_openai | 78.6% | 0.465 | 34.7% | 16.0% | 0.000 |
 
 ## Reliability Card — tfidf_logreg
 
@@ -11,15 +15,31 @@
 
 | Axis | Value | Meaning |
 |---|---|---|
-| Clean TPR @ 1% FPR | 88.5% | headline number everyone else reports |
-| Robustness Score (RS) | 0.940 | mean retained performance across transforms |
-| Transformation Stability (TS) | 0.900 | 1 = uniform across transforms, low = fragile |
-| Worst-Case Perf (WCP) | 68.0% | on `launder_lite` — what deployers should assume |
-| False-Accusation Rate, clean | 0.8% | FPR on clean human text |
-| False-Accusation Rate, worst | 11.3% | on `launder_lite` — the social-cost number |
-| Hardness Collapse (HCI) | n/a | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| Clean TPR @ 1% FPR | 79.4% | headline number everyone else reports |
+| Robustness Score (RS) | 0.941 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.885 | 1 = uniform across transforms, low = fragile |
+| Worst-Case Perf (WCP) | 58.0% | on `launder_lite` — what deployers should assume |
+| False-Accusation Rate, clean | 1.0% | FPR on clean human text |
+| False-Accusation Rate, worst | 9.3% | on `launder_lite` — the social-cost number |
+| Hardness Collapse (HCI) | -0.077 | 0 = uniform over difficulty, 1 = collapses on hard cases |
 | ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
-| Quality-Adjusted Evasion | 22.3% | evasion by transforms that PRESERVE meaning |
+| Quality-Adjusted Evasion | 30.9% | evasion by transforms that PRESERVE meaning |
+
+## Reliability Card — stylometric_gbm
+
+*Operating point: threshold calibrated once at 1% FPR on clean human text (never re-tuned).*
+
+| Axis | Value | Meaning |
+|---|---|---|
+| Clean TPR @ 1% FPR | 65.3% | headline number everyone else reports |
+| Robustness Score (RS) | 0.871 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.849 | 1 = uniform across transforms, low = fragile |
+| Worst-Case Perf (WCP) | 49.3% | on `launder_lite` — what deployers should assume |
+| False-Accusation Rate, clean | 1.0% | FPR on clean human text |
+| False-Accusation Rate, worst | 5.3% | on `launder_lite` — the social-cost number |
+| Hardness Collapse (HCI) | -0.154 | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
+| Quality-Adjusted Evasion | 43.5% | evasion by transforms that PRESERVE meaning |
 
 ## Reliability Card — perplexity
 
@@ -27,29 +47,101 @@
 
 | Axis | Value | Meaning |
 |---|---|---|
-| Clean TPR @ 1% FPR | 93.9% | headline number everyone else reports |
-| Robustness Score (RS) | 0.551 | mean retained performance across transforms |
-| Transformation Stability (TS) | 0.283 | 1 = uniform across transforms, low = fragile |
-| Worst-Case Perf (WCP) | 46.0% | on `launder_lite` — what deployers should assume |
-| False-Accusation Rate, clean | 0.8% | FPR on clean human text |
-| False-Accusation Rate, worst | 2.7% | on `esl_student` — the social-cost number |
-| Hardness Collapse (HCI) | n/a | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| Clean TPR @ 1% FPR | 94.3% | headline number everyone else reports |
+| Robustness Score (RS) | 0.564 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.295 | 1 = uniform across transforms, low = fragile |
+| Worst-Case Perf (WCP) | 49.3% | on `launder_lite` — what deployers should assume |
+| False-Accusation Rate, clean | 1.0% | FPR on clean human text |
+| False-Accusation Rate, worst | 3.2% | on `grammar_correct` — the social-cost number |
+| Hardness Collapse (HCI) | 0.000 | 0 = uniform over difficulty, 1 = collapses on hard cases |
 | ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
-| Quality-Adjusted Evasion | 24.9% | evasion by transforms that PRESERVE meaning |
+| Quality-Adjusted Evasion | 22.5% | evasion by transforms that PRESERVE meaning |
+
+## Reliability Card — fast_detect_gpt
+
+*Operating point: threshold calibrated once at 1% FPR on clean human text (never re-tuned).*
+
+| Axis | Value | Meaning |
+|---|---|---|
+| Clean TPR @ 1% FPR | 96.6% | headline number everyone else reports |
+| Robustness Score (RS) | 0.692 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.645 | 1 = uniform across transforms, low = fragile |
+| Worst-Case Perf (WCP) | 38.7% | on `launder_lite` — what deployers should assume |
+| False-Accusation Rate, clean | 1.0% | FPR on clean human text |
+| False-Accusation Rate, worst | 3.3% | on `light_human_edit` — the social-cost number |
+| Hardness Collapse (HCI) | 0.067 | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
+| Quality-Adjusted Evasion | 25.7% | evasion by transforms that PRESERVE meaning |
+
+## Reliability Card — binoculars_lite
+
+*Operating point: threshold calibrated once at 1% FPR on clean human text (never re-tuned).*
+
+| Axis | Value | Meaning |
+|---|---|---|
+| Clean TPR @ 1% FPR | 98.9% | headline number everyone else reports |
+| Robustness Score (RS) | 0.603 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.461 | 1 = uniform across transforms, low = fragile |
+| Worst-Case Perf (WCP) | 38.0% | on `launder_lite` — what deployers should assume |
+| False-Accusation Rate, clean | 1.0% | FPR on clean human text |
+| False-Accusation Rate, worst | 3.3% | on `paraphrase_t5` — the social-cost number |
+| Hardness Collapse (HCI) | 0.000 | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
+| Quality-Adjusted Evasion | 26.0% | evasion by transforms that PRESERVE meaning |
+
+## Reliability Card — roberta_openai
+
+*Operating point: threshold calibrated once at 1% FPR on clean human text (never re-tuned).*
+
+| Axis | Value | Meaning |
+|---|---|---|
+| Clean TPR @ 1% FPR | 78.6% | headline number everyone else reports |
+| Robustness Score (RS) | 0.465 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.194 | 1 = uniform across transforms, low = fragile |
+| Worst-Case Perf (WCP) | 34.7% | on `launder_lite` — what deployers should assume |
+| False-Accusation Rate, clean | 1.0% | FPR on clean human text |
+| False-Accusation Rate, worst | 16.0% | on `launder_lite` — the social-cost number |
+| Hardness Collapse (HCI) | 0.000 | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
+| Quality-Adjusted Evasion | 46.3% | evasion by transforms that PRESERVE meaning |
 
 ## Quality-Adjusted Evasion (machine class, semsim >= 0.85)
 
 | Detector | Condition | Raw evasion | QAES | Valid fraction | n |
 |---|---|---|---|---|---|
-| tfidf_logreg | esl_student | 16.7% | 17.0% | 94.0% | 150 |
-| tfidf_logreg | grammar_correct | 15.3% | 15.3% | 100.0% | 150 |
-| tfidf_logreg | launder_lite | 32.0% | 31.7% | 82.0% | 150 |
-| tfidf_logreg | light_human_edit | 14.7% | 14.7% | 100.0% | 150 |
-| tfidf_logreg | paraphrase_t5 | 37.3% | 38.5% | 95.3% | 150 |
-| tfidf_logreg | roundtrip_fr | 16.0% | 16.3% | 94.0% | 150 |
-| perplexity | esl_student | 22.0% | 22.0% | 94.0% | 150 |
-| perplexity | grammar_correct | 4.7% | 4.7% | 100.0% | 150 |
-| perplexity | launder_lite | 54.0% | 50.4% | 82.0% | 150 |
+| tfidf_logreg | esl_student | 24.7% | 25.5% | 94.0% | 150 |
+| tfidf_logreg | grammar_correct | 22.1% | 22.1% | 100.0% | 262 |
+| tfidf_logreg | launder_lite | 42.0% | 41.5% | 82.0% | 150 |
+| tfidf_logreg | light_human_edit | 22.7% | 22.7% | 100.0% | 150 |
+| tfidf_logreg | paraphrase_t5 | 46.0% | 47.6% | 95.3% | 150 |
+| tfidf_logreg | roundtrip_fr | 25.3% | 26.2% | 94.0% | 150 |
+| stylometric_gbm | esl_student | 43.3% | 43.3% | 94.0% | 150 |
+| stylometric_gbm | grammar_correct | 35.9% | 35.9% | 100.0% | 262 |
+| stylometric_gbm | launder_lite | 50.7% | 51.2% | 82.0% | 150 |
+| stylometric_gbm | light_human_edit | 34.7% | 34.7% | 100.0% | 150 |
+| stylometric_gbm | paraphrase_t5 | 53.3% | 52.4% | 95.3% | 150 |
+| stylometric_gbm | roundtrip_fr | 43.3% | 43.3% | 94.0% | 150 |
+| perplexity | esl_student | 19.3% | 19.1% | 94.0% | 150 |
+| perplexity | grammar_correct | 5.3% | 5.3% | 100.0% | 262 |
+| perplexity | launder_lite | 50.7% | 46.3% | 82.0% | 150 |
 | perplexity | light_human_edit | 4.7% | 4.7% | 100.0% | 150 |
-| perplexity | paraphrase_t5 | 42.7% | 42.7% | 95.3% | 150 |
-| perplexity | roundtrip_fr | 26.0% | 24.8% | 94.0% | 150 |
+| perplexity | paraphrase_t5 | 37.3% | 37.8% | 95.3% | 150 |
+| perplexity | roundtrip_fr | 22.7% | 22.0% | 94.0% | 150 |
+| fast_detect_gpt | esl_student | 24.7% | 25.5% | 94.0% | 150 |
+| fast_detect_gpt | grammar_correct | 5.0% | 5.0% | 100.0% | 262 |
+| fast_detect_gpt | launder_lite | 61.3% | 57.7% | 82.0% | 150 |
+| fast_detect_gpt | light_human_edit | 4.0% | 4.0% | 100.0% | 150 |
+| fast_detect_gpt | paraphrase_t5 | 35.3% | 37.1% | 95.3% | 150 |
+| fast_detect_gpt | roundtrip_fr | 24.7% | 24.8% | 94.0% | 150 |
+| binoculars_lite | esl_student | 24.0% | 24.1% | 94.0% | 150 |
+| binoculars_lite | grammar_correct | 2.7% | 2.7% | 100.0% | 262 |
+| binoculars_lite | launder_lite | 62.0% | 61.0% | 82.0% | 150 |
+| binoculars_lite | light_human_edit | 0.7% | 0.7% | 100.0% | 150 |
+| binoculars_lite | paraphrase_t5 | 42.0% | 43.4% | 95.3% | 150 |
+| binoculars_lite | roundtrip_fr | 24.7% | 24.1% | 94.0% | 150 |
+| roberta_openai | esl_student | 38.0% | 38.3% | 94.0% | 150 |
+| roberta_openai | grammar_correct | 26.7% | 26.7% | 100.0% | 262 |
+| roberta_openai | launder_lite | 65.3% | 67.5% | 82.0% | 150 |
+| roberta_openai | light_human_edit | 29.3% | 29.3% | 100.0% | 150 |
+| roberta_openai | paraphrase_t5 | 62.0% | 62.9% | 95.3% | 150 |
+| roberta_openai | roundtrip_fr | 52.7% | 53.2% | 94.0% | 150 |

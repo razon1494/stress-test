@@ -14,22 +14,30 @@ import pandas as pd
 
 from stress_test.data import load_manifest
 from stress_test.data.sources import load_jsonl
-from stress_test.detectors import TfidfLogReg, calibrate_threshold, evaluate_at_threshold
+from stress_test.detectors import (
+    StylometricDetector,
+    TfidfLogReg,
+    calibrate_threshold,
+    evaluate_at_threshold,
+)
 
 
-def build_detectors() -> list:
-    detectors = [TfidfLogReg()]
+def build_detectors(only: list[str] | None = None) -> list:
+    detectors = [TfidfLogReg(), StylometricDetector()]
     # torch-backed detectors are optional so the pipeline runs on any machine;
     # their imports are lazy, so probe for torch itself rather than catching
     # an ImportError that would only surface at scoring time
     import importlib.util
 
     if importlib.util.find_spec("torch") is not None:
-        from stress_test.detectors.zero_shot import PerplexityDetector
+        from stress_test.detectors.transformer import TransformerDetector
+        from stress_test.detectors.zero_shot import BinocularsLite, FastDetectGPT, PerplexityDetector
 
-        detectors.append(PerplexityDetector())
+        detectors += [PerplexityDetector(), FastDetectGPT(), BinocularsLite(), TransformerDetector()]
     else:
         print("torch not installed: skipping model-backed detectors")
+    if only:
+        detectors = [d for d in detectors if d.name in only]
     return detectors
 
 
@@ -39,6 +47,8 @@ def main() -> None:
     parser.add_argument("--transformed", default="data/transformed")
     parser.add_argument("--out", default="results/cache")
     parser.add_argument("--target-fpr", type=float, default=0.01)
+    parser.add_argument("--only", nargs="*", default=None,
+                        help="restrict to these detector names (default: all available)")
     args = parser.parse_args()
 
     manifest = load_manifest(Path(args.data) / "split_manifest.json")
@@ -54,7 +64,7 @@ def main() -> None:
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
     summary = {}
-    for detector in build_detectors():
+    for detector in build_detectors(only=args.only):
         detector.fit([r.text for r in train], np.array([r.label for r in train]))
         clean_scores = detector.score([r.text for r in test_clean])
         clean_labels = np.array([r.label for r in test_clean])

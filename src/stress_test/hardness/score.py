@@ -37,11 +37,18 @@ class HardnessScorer:
 
 def fit_weights(signals: dict[str, np.ndarray], committee_error: np.ndarray) -> dict[str, float]:
     """Logistic regression: which signals predict that the held-out committee
-    errs on an example? Absolute coefficients, normalized, become weights."""
+    errs on an example? Absolute coefficients, normalized, become weights.
+
+    Falls back to uniform weights when committee_error has a single class
+    (e.g. the committee made zero errors on a small/easy validation slice) —
+    there is no error signal to fit against, so equal weighting is the
+    honest default rather than an arbitrary one."""
     from sklearn.linear_model import LogisticRegression
 
-    x = np.column_stack([np.asarray(signals[n], dtype=float) for n in SIGNAL_NAMES])
     y = np.asarray(committee_error, dtype=int)
+    if len(np.unique(y)) < 2:
+        return {name: 1.0 / len(SIGNAL_NAMES) for name in SIGNAL_NAMES}
+    x = np.column_stack([np.asarray(signals[n], dtype=float) for n in SIGNAL_NAMES])
     clf = LogisticRegression(max_iter=2000).fit(x, y)
     coefs = np.abs(clf.coef_[0])
     if coefs.sum() == 0:
