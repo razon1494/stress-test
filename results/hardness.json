@@ -1,186 +1,186 @@
 {
   "binoculars_lite": {
     "weights": {
-      "perplexity_closeness": 0.037101574381828394,
-      "readability_normality": 0.07535904300107328,
-      "semantic_consistency": 0.13338909392020543,
-      "lexical_diversity": 0.2635854085998838,
-      "committee_margin": 0.4905648800970092
+      "perplexity_closeness": 0.293326084266344,
+      "readability_normality": 0.19244963982313756,
+      "semantic_consistency": 0.0041029925657025835,
+      "lexical_diversity": 0.11612473052257649,
+      "committee_margin": 0.3939965528222392
     },
     "by_condition": {
       "clean": {
-        "hci": 0.0,
+        "hci": -0.025933314334568275,
         "acc_by_quantile": [
+          0.9666666666666667,
+          0.9916666666666667,
           1.0,
           1.0,
-          1.0,
-          1.0,
-          1.0
+          0.9917355371900827
         ]
       },
       "paraphrase_t5": {
-        "hci": 0.0,
+        "hci": 0.05956112852664581,
         "acc_by_quantile": [
-          1.0,
-          1.0,
-          0.9333333333333333,
-          0.9,
-          1.0
+          0.9666666666666667,
+          0.9833333333333333,
+          0.9583333333333334,
+          0.9166666666666666,
+          0.9090909090909091
         ]
       }
     }
   },
   "fast_detect_gpt": {
     "weights": {
-      "perplexity_closeness": 0.19850615134714023,
-      "readability_normality": 0.11916066027401898,
-      "semantic_consistency": 0.17168060971441274,
-      "lexical_diversity": 0.02716070920001223,
-      "committee_margin": 0.4834918694644159
+      "perplexity_closeness": 0.056052702270450734,
+      "readability_normality": 0.13293982139581698,
+      "semantic_consistency": 0.07566518635176715,
+      "lexical_diversity": 0.2626467176085028,
+      "committee_margin": 0.47269557237346244
     },
     "by_condition": {
       "clean": {
-        "hci": 0.0,
+        "hci": -0.025641025641025664,
         "acc_by_quantile": [
-          1.0,
-          1.0,
-          0.9666666666666667,
+          0.975,
+          0.9833333333333333,
+          0.9833333333333333,
           1.0,
           1.0
         ]
       },
       "paraphrase_t5": {
-        "hci": 0.06666666666666665,
+        "hci": 0.0253633513821602,
         "acc_by_quantile": [
-          1.0,
-          0.9333333333333333,
-          1.0,
-          1.0,
-          0.9333333333333333
+          0.9666666666666667,
+          0.9083333333333333,
+          0.8916666666666667,
+          0.8666666666666667,
+          0.9421487603305785
         ]
       }
     }
   },
   "perplexity": {
     "weights": {
-      "perplexity_closeness": 0.2,
-      "readability_normality": 0.2,
-      "semantic_consistency": 0.2,
-      "lexical_diversity": 0.2,
-      "committee_margin": 0.2
+      "perplexity_closeness": 0.21179317349203178,
+      "readability_normality": 0.002489953665193271,
+      "semantic_consistency": 0.043055830600397575,
+      "lexical_diversity": 0.13106137941547277,
+      "committee_margin": 0.6115996628269046
     },
     "by_condition": {
       "clean": {
-        "hci": 0.0,
+        "hci": -0.016949152542372933,
         "acc_by_quantile": [
-          1.0,
-          1.0,
-          1.0,
-          0.9666666666666667,
+          0.9833333333333333,
+          0.9833333333333333,
+          0.9916666666666667,
+          0.9916666666666667,
           1.0
         ]
       },
       "paraphrase_t5": {
-        "hci": 0.0,
+        "hci": 0.008264462809917328,
         "acc_by_quantile": [
           1.0,
           1.0,
-          1.0,
-          1.0,
-          1.0
+          0.975,
+          0.9583333333333334,
+          0.9917355371900827
         ]
       }
     }
   },
   "roberta_openai": {
     "weights": {
-      "perplexity_closeness": 0.15372053928390217,
-      "readability_normality": 0.19772627548556443,
-      "semantic_consistency": 0.1390635138825907,
-      "lexical_diversity": 0.22697183025752435,
-      "committee_margin": 0.2825178410904184
+      "perplexity_closeness": 0.008167849923837164,
+      "readability_normality": 0.11543006218210058,
+      "semantic_consistency": 0.49013682108213286,
+      "lexical_diversity": 0.2087361296193067,
+      "committee_margin": 0.1775291371926227
     },
     "by_condition": {
       "clean": {
-        "hci": 0.033333333333333326,
+        "hci": -0.025933314334568275,
         "acc_by_quantile": [
+          0.9666666666666667,
+          0.9916666666666667,
+          0.9916666666666667,
           1.0,
-          1.0,
-          1.0,
-          1.0,
-          0.9666666666666667
+          0.9917355371900827
         ]
       },
       "paraphrase_t5": {
-        "hci": 0.0,
+        "hci": -0.10537190082644629,
         "acc_by_quantile": [
-          0.8666666666666667,
-          0.9333333333333333,
-          0.9333333333333333,
-          0.9333333333333333,
-          0.8666666666666667
+          0.8,
+          0.8333333333333334,
+          0.825,
+          0.9166666666666666,
+          0.8842975206611571
         ]
       }
     }
   },
   "stylometric_gbm": {
     "weights": {
-      "perplexity_closeness": 0.11057853721653375,
-      "readability_normality": 0.4946293137701238,
-      "semantic_consistency": 0.10757467024659625,
-      "lexical_diversity": 0.19447596970822537,
-      "committee_margin": 0.09274150905852067
+      "perplexity_closeness": 0.05147595519454684,
+      "readability_normality": 0.4200102322760102,
+      "semantic_consistency": 0.018358699211322153,
+      "lexical_diversity": 0.4321400069740558,
+      "committee_margin": 0.07801510634406511
     },
     "by_condition": {
       "clean": {
-        "hci": -0.03448275862068965,
+        "hci": -0.025641025641025664,
         "acc_by_quantile": [
-          0.9666666666666667,
-          0.9666666666666667,
-          0.9666666666666667,
+          0.975,
+          0.9916666666666667,
+          0.9833333333333333,
           1.0,
           1.0
         ]
       },
       "paraphrase_t5": {
-        "hci": -0.1538461538461538,
+        "hci": -0.04393214441061339,
         "acc_by_quantile": [
-          0.8666666666666667,
+          0.95,
+          0.975,
           0.9666666666666667,
-          0.9666666666666667,
-          0.9666666666666667,
-          1.0
+          1.0,
+          0.9917355371900827
         ]
       }
     }
   },
   "tfidf_logreg": {
     "weights": {
-      "perplexity_closeness": 0.023578964144230885,
-      "readability_normality": 0.09026751104626698,
-      "semantic_consistency": 0.21541118033785378,
-      "lexical_diversity": 0.4365954890804859,
-      "committee_margin": 0.2341468553911625
+      "perplexity_closeness": 0.3210908975629827,
+      "readability_normality": 0.10128144177334163,
+      "semantic_consistency": 0.17025440706152042,
+      "lexical_diversity": 0.20947005827108306,
+      "committee_margin": 0.19790319533107223
     },
     "by_condition": {
       "clean": {
-        "hci": 0.0,
+        "hci": -0.016949152542372933,
         "acc_by_quantile": [
-          1.0,
-          1.0,
-          1.0,
+          0.9833333333333333,
+          0.975,
+          0.9916666666666667,
           1.0,
           1.0
         ]
       },
       "paraphrase_t5": {
-        "hci": -0.0769230769230769,
+        "hci": -0.056014692378328776,
         "acc_by_quantile": [
-          0.8666666666666667,
-          0.9666666666666667,
-          0.9666666666666667,
-          0.9333333333333333,
-          0.9333333333333333
+          0.9,
+          0.875,
+          0.9166666666666666,
+          0.9416666666666667,
+          0.9504132231404959
         ]
       }
     }
