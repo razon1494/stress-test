@@ -1,0 +1,74 @@
+{
+  "tfidf_logreg__clean": {
+    "native": {
+      "point": 0.006329113924050633,
+      "ci_low": 0.0,
+      "ci_high": 0.0189873417721519,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.02197802197802198,
+      "ci_low": 0.00546448087431694,
+      "ci_high": 0.04419889502762431,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
+  "tfidf_logreg__grammar_correct": {
+    "native": {
+      "point": 0.006329113924050633,
+      "ci_low": 0.0,
+      "ci_high": 0.0189873417721519,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.01098901098901099,
+      "ci_low": 0.0,
+      "ci_high": 0.027624309392265192,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
+  "perplexity__clean": {
+    "native": {
+      "point": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.016483516483516484,
+      "ci_low": 0.0,
+      "ci_high": 0.03825136612021858,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
+  "perplexity__grammar_correct": {
+    "native": {
+      "point": 0.02531645569620253,
+      "ci_low": 0.006329113924050633,
+      "ci_high": 0.05063291139240506,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.054945054945054944,
+      "ci_low": 0.026903837539196663,
+      "ci_high": 0.08839779005524862,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  }
+}
