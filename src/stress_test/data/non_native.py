@@ -141,33 +141,73 @@ def build_human_edit_records(records: list[Record]) -> list[Record]:
 
 
 def load_icnale_written_essays(
-    root: str | Path = "data/external/icnale",
+    root: str | Path = "data/external/icnale/ICNALE_WE_2.6/WE_0_Unclassified_Unmerged",
+    per_region: int | None = None,
 ) -> Iterator[Record]:
-    """Parses ICNALE's file-naming convention:
-    WE_<Region>_<Task>_<StudentID>_<CEFR>.txt (native speakers use region 'ENS').
-    Adjust the glob/parse below once you've unzipped the real archive and can
-    confirm the exact folder layout (Merged/Plain_Text vs Unmerged/Classified)."""
+    """ICNALE Written Essays v2.6, verified layout: one essay per file in
+    WE_0_Unclassified_Unmerged/, named WE_<Region>_<Topic>_<ID>_<CEFR>.txt
+    (e.g. WE_CHN_PTJ0_001_B1_1.txt; natives are WE_ENS_..._XX_1.txt).
+    Only this directory is read — the Merged/Tagged variants are duplicates."""
     root = Path(root)
     if not root.exists():
         raise FileNotFoundError(
             f"{root} not found — unzip the password-protected ICNALE WE archive here first"
         )
-    for path in sorted(root.rglob("*.txt")):
+    counts: dict[str, int] = {}
+    for path in sorted(root.glob("WE_*.txt")):
         parts = path.stem.split("_")
         if len(parts) < 5:
             continue
-        _, region, _task, student_id, *cefr = parts
+        _, region, topic, student_id, *cefr_parts = parts
+        if per_region is not None and counts.get(region, 0) >= per_region:
+            continue
         text = path.read_text(encoding="utf-8-sig").strip()
         if not text:
             continue
-        native = region.upper() in {"ENS", "ENL"}  # ICNALE's native-speaker code
+        counts[region] = counts.get(region, 0) + 1
+        native = region.upper() == "ENS"
+        cefr = "N" if native else "_".join(cefr_parts)
         yield Record(
             text=text,
             label=0,
             doc_id=make_doc_id(text, f"icnale_{path.stem}"),
-            domain="icnale_essay",
+            domain="icnale_native" if native else "icnale_learner",
             generator="human",
             source_dataset="icnale_we",
             transform="clean",
-            meta={"native": native, "region": region, "cefr": "_".join(cefr), "student_id": student_id},
+            meta={"native": native, "region": region, "cefr": cefr,
+                  "topic": topic, "student_id": student_id},
         )
+
+
+def load_icnale_edited_pairs(
+    root: str | Path = "data/external/icnale/ICNALE_EE_3.1/ICNALE_EE_3.1/EE_0_Unclassified_Unmerged",
+) -> tuple[list[Record], list[Record]]:
+    """ICNALE Edited Essays v3.1: (originals, professionally_edited) with
+    matching doc_ids — a second REAL human-editing source, corroborating the
+    W&I gold-edit condition. Files pair as *_ORIG.txt / *_EDIT.txt."""
+    root = Path(root)
+    if not root.exists():
+        raise FileNotFoundError(
+            f"{root} not found — unzip the password-protected ICNALE EE archive here first"
+        )
+    originals, edited = [], []
+    for orig_path in sorted(root.glob("*_ORIG.txt")):
+        edit_path = orig_path.with_name(orig_path.name.replace("_ORIG", "_EDIT"))
+        if not edit_path.exists():
+            continue
+        orig_text = orig_path.read_text(encoding="utf-8-sig").strip()
+        edit_text = edit_path.read_text(encoding="utf-8-sig").strip()
+        if not orig_text or not edit_text:
+            continue
+        stem = orig_path.stem.replace("_ORIG", "")
+        parts = stem.split("_")
+        region = parts[1] if len(parts) > 1 else "unknown"
+        cefr = "_".join(parts[4:]) if len(parts) > 4 else ""
+        doc_id = make_doc_id(orig_text, f"icnale_ee_{stem}")
+        base = dict(label=0, doc_id=doc_id, domain="icnale_learner", generator="human",
+                    source_dataset="icnale_ee",
+                    meta={"native": False, "region": region, "cefr": cefr})
+        originals.append(Record(text=orig_text, transform="clean", **base))
+        edited.append(Record(text=edit_text, transform="human_edit", **base))
+    return originals, edited

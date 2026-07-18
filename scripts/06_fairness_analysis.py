@@ -46,15 +46,22 @@ def main() -> None:
     summary = json.loads((cache / "summary.json").read_text())
     fairness_records = [
         r for r in load_jsonl(Path(args.data) / "clean.jsonl")
-        if r.domain in ("toefl", "student_essay", "wi_learner", "locness")
+        if r.domain in ("toefl", "student_essay", "wi_learner", "locness",
+                        "icnale_learner", "icnale_native")
     ]
     doc_native = {r.doc_id: bool(r.meta["native"]) for r in fairness_records}
-    # CEFR proficiency band (A/B/C from W&I, N for LOCNESS natives) — coarse
-    # band letter only, so A2.i and A2.ii pool together
+    # CEFR proficiency band (A/B/C from W&I, N for natives) — coarse band
+    # letter only, so A2.i and A2.ii pool together
     doc_band = {
         r.doc_id: (r.meta.get("cefr") or "")[:1]
         for r in fairness_records
-        if r.source_dataset == "wi_locness" and r.meta.get("cefr")
+        if r.source_dataset in ("wi_locness", "icnale_we") and r.meta.get("cefr")
+    }
+    # ICNALE first-language/country axis (ENS = native English reference)
+    doc_region = {
+        r.doc_id: r.meta["region"]
+        for r in fairness_records
+        if r.source_dataset in ("icnale_we", "icnale_ee") and r.meta.get("region")
     }
     if not doc_native:
         raise SystemExit(
@@ -109,6 +116,32 @@ def main() -> None:
                 cells = []
                 for band in bands:
                     subset = df[df["band"] == band]
+                    if subset.empty:
+                        cells.append("—")
+                    else:
+                        far = float((subset["score"] > threshold).mean())
+                        cells.append(f"{far:.1%} ({len(subset)})")
+                lines.append(f"| {detector} | {condition} | " + " | ".join(cells) + " |")
+
+    if doc_region:
+        regions = sorted(set(doc_region.values()))
+        lines += ["", "## FAR by country/region (ICNALE; ENS = native English)", "",
+                  "| Detector | Condition | " + " | ".join(regions) + " |",
+                  "|---|---|" + "---|" * len(regions)]
+        for detector, det_payload in summary.items():
+            threshold = det_payload["threshold"]
+            for condition in args.conditions:
+                path = cache / f"{detector}__{condition}.csv"
+                if not path.exists():
+                    continue
+                df = pd.read_csv(path)
+                df = df[df["doc_id"].isin(doc_region)].copy()
+                if df.empty:
+                    continue
+                df["region"] = df["doc_id"].map(doc_region)
+                cells = []
+                for region in regions:
+                    subset = df[df["region"] == region]
                     if subset.empty:
                         cells.append("—")
                     else:

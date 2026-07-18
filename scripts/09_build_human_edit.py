@@ -21,16 +21,28 @@ def main() -> None:
     parser.add_argument("--out", default="data/transformed")
     args = parser.parse_args()
 
-    source = [
-        r for r in load_jsonl(Path(args.data) / "clean.jsonl")
-        if r.source_dataset == "wi_locness"
-    ]
+    clean = list(load_jsonl(Path(args.data) / "clean.jsonl"))
+
+    wi_source = [r for r in clean if r.source_dataset == "wi_locness"]
+    source, edited = list(wi_source), build_human_edit_records(wi_source)
+
+    # ICNALE EE: professionally edited counterparts, paired by doc_id with the
+    # EE originals that stage 1 put into clean.jsonl
+    ee_clean_ids = {r.doc_id for r in clean if r.source_dataset == "icnale_ee"}
+    if ee_clean_ids:
+        from stress_test.data.non_native import load_icnale_edited_pairs
+
+        ee_orig, ee_edit = load_icnale_edited_pairs()
+        for orig, edit in zip(ee_orig, ee_edit):
+            if orig.doc_id in ee_clean_ids:
+                source.append(orig)
+                edited.append(edit)
+
     if not source:
         raise SystemExit(
-            "no wi_locness records in clean.jsonl — rerun scripts/01_build_dataset.py "
-            "with --wi-locness-per-band N"
+            "no wi_locness or icnale_ee records in clean.jsonl — rerun "
+            "scripts/01_build_dataset.py with --wi-locness-per-band N / --include-icnale-ee"
         )
-    edited = build_human_edit_records(source)
 
     from stress_test.semantics import semantic_similarity
 
