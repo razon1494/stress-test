@@ -27,6 +27,11 @@ def clustered_bootstrap_ci(
     cl = np.asarray(clusters)
     if vals.shape[0] != cl.shape[0]:
         raise ValueError("values and clusters must be the same length")
+    if vals.size == 0:
+        # single-class conditions (e.g. human-only human_edit) have no rows
+        # for the other class's rate — report NaN rather than crashing
+        nan = float("nan")
+        return {"point": nan, "ci_low": nan, "ci_high": nan, "n_clusters": 0, "n_boot": n_boot}
     unique = np.unique(cl)
     members = {c: np.flatnonzero(cl == c) for c in unique}
     rng = np.random.default_rng(seed)

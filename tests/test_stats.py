@@ -28,6 +28,11 @@ def test_clustered_ci_wider_than_iid_when_clusters_correlated():
     assert width(clustered) > width(iid)
 
 
+def test_clustered_bootstrap_empty_input_returns_nan():
+    r = clustered_bootstrap_ci([], [], n_boot=100)
+    assert np.isnan(r["point"]) and np.isnan(r["ci_low"]) and r["n_clusters"] == 0
+
+
 def test_permutation_test_detects_real_difference():
     a = np.ones(200, dtype=bool)
     b = np.zeros(200, dtype=bool)

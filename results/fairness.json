@@ -1,74 +1,110 @@
 {
   "tfidf_logreg__clean": {
     "native": {
-      "point": 0.006329113924050633,
+      "point": 0.004807692307692308,
       "ci_low": 0.0,
-      "ci_high": 0.0189873417721519,
-      "n_clusters": 158,
+      "ci_high": 0.014423076923076924,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.02197802197802198,
-      "ci_low": 0.00546448087431694,
-      "ci_high": 0.04419889502762431,
-      "n_clusters": 181,
+      "point": 0.014778325123152709,
+      "ci_low": 0.006546644844517185,
+      "ci_high": 0.024671052631578948,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
     }
   },
   "tfidf_logreg__grammar_correct": {
     "native": {
-      "point": 0.006329113924050633,
+      "point": 0.0,
       "ci_low": 0.0,
-      "ci_high": 0.0189873417721519,
-      "n_clusters": 158,
+      "ci_high": 0.0,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.01098901098901099,
-      "ci_low": 0.0,
-      "ci_high": 0.027624309392265192,
-      "n_clusters": 181,
+      "point": 0.019704433497536946,
+      "ci_low": 0.009819967266775777,
+      "ci_high": 0.031198686371100164,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
+    }
+  },
+  "tfidf_logreg__human_edit": {
+    "native": {
+      "point": 0.02,
+      "ci_low": 0.0,
+      "ci_high": 0.06,
+      "n_clusters": 50,
+      "n_boot": 2000,
+      "n": 50
+    },
+    "non_native": {
+      "point": 0.01873536299765808,
+      "ci_low": 0.00702576112412178,
+      "ci_high": 0.03278688524590164,
+      "n_clusters": 427,
+      "n_boot": 2000,
+      "n": 427
     }
   },
   "stylometric_gbm__clean": {
     "native": {
-      "point": 0.0,
+      "point": 0.004807692307692308,
       "ci_low": 0.0,
-      "ci_high": 0.0,
-      "n_clusters": 158,
+      "ci_high": 0.014423076923076924,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.01098901098901099,
-      "ci_low": 0.0,
-      "ci_high": 0.027624309392265192,
-      "n_clusters": 181,
+      "point": 0.009852216748768473,
+      "ci_low": 0.003278554372031875,
+      "ci_high": 0.018092105263157895,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
     }
   },
   "stylometric_gbm__grammar_correct": {
     "native": {
-      "point": 0.0,
+      "point": 0.004807692307692308,
       "ci_low": 0.0,
-      "ci_high": 0.0,
-      "n_clusters": 158,
+      "ci_high": 0.014423076923076924,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.016483516483516484,
-      "ci_low": 0.0,
-      "ci_high": 0.038461538461538464,
-      "n_clusters": 181,
+      "point": 0.011494252873563218,
+      "ci_low": 0.003284072249589491,
+      "ci_high": 0.019736842105263157,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
+    }
+  },
+  "stylometric_gbm__human_edit": {
+    "native": {
+      "point": 0.02,
+      "ci_low": 0.0,
+      "ci_high": 0.06,
+      "n_clusters": 50,
+      "n_boot": 2000,
+      "n": 50
+    },
+    "non_native": {
+      "point": 0.01405152224824356,
+      "ci_low": 0.00468384074941452,
+      "ci_high": 0.02576112412177986,
+      "n_clusters": 427,
+      "n_boot": 2000,
+      "n": 427
     }
   },
   "perplexity__clean": {
@@ -76,71 +112,107 @@
       "point": 0.0,
       "ci_low": 0.0,
       "ci_high": 0.0,
-      "n_clusters": 158,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.016483516483516484,
-      "ci_low": 0.0,
-      "ci_high": 0.03825136612021858,
-      "n_clusters": 181,
+      "point": 0.009852216748768473,
+      "ci_low": 0.003278688524590164,
+      "ci_high": 0.018092105263157895,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
     }
   },
   "perplexity__grammar_correct": {
     "native": {
-      "point": 0.02531645569620253,
-      "ci_low": 0.006329113924050633,
-      "ci_high": 0.05063291139240506,
-      "n_clusters": 158,
+      "point": 0.02403846153846154,
+      "ci_low": 0.004807692307692308,
+      "ci_high": 0.04807692307692308,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.054945054945054944,
-      "ci_low": 0.026903837539196663,
-      "ci_high": 0.08839779005524862,
-      "n_clusters": 181,
+      "point": 0.06239737274220033,
+      "ci_low": 0.044224816652286454,
+      "ci_high": 0.08197057794287865,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
+    }
+  },
+  "perplexity__human_edit": {
+    "native": {
+      "point": 0.02,
+      "ci_low": 0.0,
+      "ci_high": 0.06,
+      "n_clusters": 50,
+      "n_boot": 2000,
+      "n": 50
+    },
+    "non_native": {
+      "point": 0.03044496487119438,
+      "ci_low": 0.01639344262295082,
+      "ci_high": 0.0468384074941452,
+      "n_clusters": 427,
+      "n_boot": 2000,
+      "n": 427
     }
   },
   "fast_detect_gpt__clean": {
     "native": {
-      "point": 0.0189873417721519,
+      "point": 0.004807692307692308,
       "ci_low": 0.0,
-      "ci_high": 0.04430379746835443,
-      "n_clusters": 158,
+      "ci_high": 0.014423076923076924,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.01098901098901099,
-      "ci_low": 0.0,
-      "ci_high": 0.027624309392265192,
-      "n_clusters": 181,
+      "point": 0.013136288998357963,
+      "ci_low": 0.0049261083743842365,
+      "ci_high": 0.023026315789473683,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
     }
   },
   "fast_detect_gpt__grammar_correct": {
     "native": {
-      "point": 0.04430379746835443,
-      "ci_low": 0.012658227848101266,
-      "ci_high": 0.08227848101265822,
-      "n_clusters": 158,
+      "point": 0.009615384615384616,
+      "ci_low": 0.0,
+      "ci_high": 0.02403846153846154,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.04395604395604396,
-      "ci_low": 0.016483516483516484,
-      "ci_high": 0.0718232044198895,
-      "n_clusters": 181,
+      "point": 0.034482758620689655,
+      "ci_low": 0.021311475409836064,
+      "ci_high": 0.05090311986863711,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
+    }
+  },
+  "fast_detect_gpt__human_edit": {
+    "native": {
+      "point": 0.02,
+      "ci_low": 0.0,
+      "ci_high": 0.06,
+      "n_clusters": 50,
+      "n_boot": 2000,
+      "n": 50
+    },
+    "non_native": {
+      "point": 0.03044496487119438,
+      "ci_low": 0.01639344262295082,
+      "ci_high": 0.0468384074941452,
+      "n_clusters": 427,
+      "n_boot": 2000,
+      "n": 427
     }
   },
   "binoculars_lite__clean": {
@@ -148,17 +220,17 @@
       "point": 0.0,
       "ci_low": 0.0,
       "ci_high": 0.0,
-      "n_clusters": 158,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.027472527472527472,
-      "ci_low": 0.005494505494505495,
-      "ci_high": 0.0546448087431694,
-      "n_clusters": 181,
+      "point": 0.014778325123152709,
+      "ci_low": 0.006546377416214713,
+      "ci_high": 0.024671052631578948,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
     }
   },
   "binoculars_lite__grammar_correct": {
@@ -166,17 +238,35 @@
       "point": 0.0,
       "ci_low": 0.0,
       "ci_high": 0.0,
-      "n_clusters": 158,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.07692307692307693,
-      "ci_low": 0.03866872078198045,
-      "ci_high": 0.11602209944751381,
-      "n_clusters": 181,
+      "point": 0.027914614121510674,
+      "ci_low": 0.014778325123152709,
+      "ci_high": 0.04111842105263158,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
+    }
+  },
+  "binoculars_lite__human_edit": {
+    "native": {
+      "point": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "n_clusters": 50,
+      "n_boot": 2000,
+      "n": 50
+    },
+    "non_native": {
+      "point": 0.03278688524590164,
+      "ci_low": 0.0186768149882904,
+      "ci_high": 0.05152224824355972,
+      "n_clusters": 427,
+      "n_boot": 2000,
+      "n": 427
     }
   },
   "roberta_openai__clean": {
@@ -184,35 +274,53 @@
       "point": 0.0,
       "ci_low": 0.0,
       "ci_high": 0.0,
-      "n_clusters": 158,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.03296703296703297,
-      "ci_low": 0.01092896174863388,
-      "ci_high": 0.060109289617486336,
-      "n_clusters": 181,
+      "point": 0.014778325123152709,
+      "ci_low": 0.006557377049180328,
+      "ci_high": 0.024671052631578948,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
     }
   },
   "roberta_openai__grammar_correct": {
     "native": {
-      "point": 0.056962025316455694,
-      "ci_low": 0.02531645569620253,
-      "ci_high": 0.0949367088607595,
-      "n_clusters": 158,
+      "point": 0.04807692307692308,
+      "ci_low": 0.019230769230769232,
+      "ci_high": 0.07692307692307693,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.06593406593406594,
-      "ci_low": 0.03296703296703297,
-      "ci_high": 0.1043956043956044,
-      "n_clusters": 181,
+      "point": 0.10016420361247948,
+      "ci_low": 0.0755336617405583,
+      "ci_high": 0.12335526315789473,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
+    }
+  },
+  "roberta_openai__human_edit": {
+    "native": {
+      "point": 0.02,
+      "ci_low": 0.0,
+      "ci_high": 0.06,
+      "n_clusters": 50,
+      "n_boot": 2000,
+      "n": 50
+    },
+    "non_native": {
+      "point": 0.06791569086651054,
+      "ci_low": 0.04449648711943794,
+      "ci_high": 0.0913934426229505,
+      "n_clusters": 427,
+      "n_boot": 2000,
+      "n": 427
     }
   },
   "deberta_hc3_ft__clean": {
@@ -220,35 +328,53 @@
       "point": 0.0,
       "ci_low": 0.0,
       "ci_high": 0.0,
-      "n_clusters": 158,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.03296703296703297,
-      "ci_low": 0.01092896174863388,
-      "ci_high": 0.06077348066298342,
-      "n_clusters": 181,
+      "point": 0.014778325123152709,
+      "ci_low": 0.006546644844517185,
+      "ci_high": 0.024671052631578948,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
     }
   },
   "deberta_hc3_ft__grammar_correct": {
     "native": {
-      "point": 0.0189873417721519,
+      "point": 0.014423076923076924,
       "ci_low": 0.0,
-      "ci_high": 0.04430379746835443,
-      "n_clusters": 158,
+      "ci_high": 0.03365384615384615,
+      "n_clusters": 208,
       "n_boot": 2000,
-      "n": 158
+      "n": 208
     },
     "non_native": {
-      "point": 0.03296703296703297,
-      "ci_low": 0.01092896174863388,
-      "ci_high": 0.06043956043956044,
-      "n_clusters": 181,
+      "point": 0.04433497536945813,
+      "ci_low": 0.029459901800327332,
+      "ci_high": 0.06085526315789474,
+      "n_clusters": 608,
       "n_boot": 2000,
-      "n": 182
+      "n": 609
+    }
+  },
+  "deberta_hc3_ft__human_edit": {
+    "native": {
+      "point": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "n_clusters": 50,
+      "n_boot": 2000,
+      "n": 50
+    },
+    "non_native": {
+      "point": 0.0351288056206089,
+      "ci_low": 0.01873536299765808,
+      "ci_high": 0.053864168618266976,
+      "n_clusters": 427,
+      "n_boot": 2000,
+      "n": 427
     }
   }
 }

@@ -48,21 +48,36 @@ def main() -> None:
     conditions += [build_pipeline(name) for name in args.pipelines]
 
     for condition in conditions:
-        out_records = []
-        for record in tqdm(test_records, desc=condition.name):
+        # incremental: reuse already-transformed records from a previous run of
+        # this condition (keyed by doc_id+label), transform only the new ones
+        out_path = Path(args.out) / f"{condition.name}.jsonl"
+        cached: dict[tuple, object] = {}
+        if out_path.exists():
+            cached = {(r.doc_id, r.label): r for r in load_jsonl(out_path)}
+        todo = [r for r in test_records if (r.doc_id, r.label) not in cached]
+        print(f"{condition.name}: {len(cached)} cached, {len(todo)} to transform")
+
+        new_records = []
+        for record in tqdm(todo, desc=condition.name):
             result = condition(record.text, seed=args.seed)
-            out_records.append(type(record)(**{**record.to_dict(), "text": result.text,
+            new_records.append(type(record)(**{**record.to_dict(), "text": result.text,
                                                "transform": condition.name,
                                                "meta": {**record.meta, **result.params}}))
-        if not args.no_semsim:
+        if new_records and not args.no_semsim:
             from stress_test.semantics import semantic_similarity
 
-            sims = semantic_similarity(
-                [r.text for r in test_records], [r.text for r in out_records]
-            )
-            for record, sim in zip(out_records, sims):
+            sims = semantic_similarity([r.text for r in todo], [r.text for r in new_records])
+            for record, sim in zip(new_records, sims):
                 record.meta["semsim"] = round(float(sim), 4)
-        n = write_jsonl(out_records, Path(args.out) / f"{condition.name}.jsonl")
+
+        # keep output aligned to the current test set: cached where available,
+        # freshly transformed otherwise
+        new_by_key = {(r.doc_id, r.label): r for r in new_records}
+        out_records = [
+            cached.get((r.doc_id, r.label)) or new_by_key[(r.doc_id, r.label)]
+            for r in test_records
+        ]
+        n = write_jsonl(out_records, out_path)
         print(f"{condition.name}: {n} records")
 
 
