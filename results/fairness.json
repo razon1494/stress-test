@@ -214,5 +214,41 @@
       "n_boot": 2000,
       "n": 182
     }
+  },
+  "deberta_hc3_ft__clean": {
+    "native": {
+      "point": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.03296703296703297,
+      "ci_low": 0.01092896174863388,
+      "ci_high": 0.06077348066298342,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
+  },
+  "deberta_hc3_ft__grammar_correct": {
+    "native": {
+      "point": 0.0189873417721519,
+      "ci_low": 0.0,
+      "ci_high": 0.04430379746835443,
+      "n_clusters": 158,
+      "n_boot": 2000,
+      "n": 158
+    },
+    "non_native": {
+      "point": 0.03296703296703297,
+      "ci_low": 0.01092896174863388,
+      "ci_high": 0.06043956043956044,
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "n": 182
+    }
   }
 }

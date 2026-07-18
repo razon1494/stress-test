@@ -19,6 +19,19 @@
 | binoculars_lite | typo | 31.3% [25.6%, 37.0%] | 0.0% [0.0%, 0.0%] |
 | binoculars_lite | whitespace_noise | 82.8% [78.2%, 87.4%] | 0.0% [0.0%, 0.0%] |
 | binoculars_lite | zero_width | 17.2% [12.6%, 22.1%] | 0.0% [0.0%, 0.0%] |
+| deberta_hc3_ft | case_noise | 0.0% [0.0%, 0.0%] | 0.0% [0.0%, 0.0%] |
+| deberta_hc3_ft | clean | 88.2% [84.4%, 92.0%] | 1.2% [0.3%, 2.2%] |
+| deberta_hc3_ft | contraction_expand | 88.5% [84.7%, 92.4%] | 0.4% [0.0%, 1.1%] |
+| deberta_hc3_ft | esl_student | 84.7% [78.7%, 90.0%] | 0.7% [0.0%, 2.0%] |
+| deberta_hc3_ft | grammar_correct | 86.6% [82.8%, 90.5%] | 1.7% [0.7%, 2.8%] |
+| deberta_hc3_ft | homoglyph | 8.4% [5.3%, 11.8%] | 0.0% [0.0%, 0.0%] |
+| deberta_hc3_ft | launder_lite | 62.7% [54.7%, 70.0%] | 0.0% [0.0%, 0.0%] |
+| deberta_hc3_ft | light_human_edit | 86.7% [81.3%, 92.0%] | 0.7% [0.0%, 2.0%] |
+| deberta_hc3_ft | paraphrase_t5 | 87.0% [83.2%, 91.2%] | 1.2% [0.3%, 2.2%] |
+| deberta_hc3_ft | roundtrip_fr | 82.7% [76.7%, 88.7%] | 0.7% [0.0%, 2.0%] |
+| deberta_hc3_ft | typo | 28.2% [22.9%, 33.6%] | 0.0% [0.0%, 0.0%] |
+| deberta_hc3_ft | whitespace_noise | 88.2% [84.4%, 92.0%] | 0.4% [0.0%, 1.1%] |
+| deberta_hc3_ft | zero_width | 0.0% [0.0%, 0.0%] | 0.0% [0.0%, 0.0%] |
 | fast_detect_gpt | case_noise | 29.4% [24.0%, 35.1%] | 0.0% [0.0%, 0.0%] |
 | fast_detect_gpt | clean | 96.6% [94.3%, 98.5%] | 1.2% [0.3%, 2.2%] |
 | fast_detect_gpt | contraction_expand | 96.9% [94.7%, 98.9%] | 0.8% [0.0%, 1.9%] |
@@ -86,6 +99,24 @@
 | tfidf_logreg | zero_width | 79.4% [74.4%, 84.0%] | 1.1% [0.0%, 2.7%] |
 
 ## Paired detector comparisons (per-example accuracy)
+
+### binoculars_lite vs deberta_hc3_ft
+
+| Condition | Δ accuracy | only-A / only-B correct | p (perm) | p (Holm) |
+|---|---|---|---|---|
+| case_noise | +1.7% | 9 / 0 | 0.0029 | 0.0174 * |
+| clean | +3.3% | 33 / 4 | 0.0001 | 0.0013 * |
+| contraction_expand | +5.3% | 30 / 2 | 0.0001 | 0.0013 * |
+| esl_student | -5.0% | 14 / 29 | 0.0306 | 0.1224 |
+| grammar_correct | +2.2% | 41 / 22 | 0.0223 | 0.1115 |
+| homoglyph | +14.3% | 85 / 10 | 0.0001 | 0.0013 * |
+| launder_lite | -13.3% | 16 / 56 | 0.0001 | 0.0013 * |
+| light_human_edit | +5.7% | 20 / 3 | 0.0011 | 0.0077 * |
+| paraphrase_t5 | -11.7% | 21 / 122 | 0.0001 | 0.0013 * |
+| roundtrip_fr | -4.3% | 16 / 29 | 0.0668 | 0.2004 |
+| typo | +1.5% | 59 / 51 | 0.4997 | 0.4997 |
+| whitespace_noise | -2.5% | 21 / 34 | 0.1050 | 0.2100 |
+| zero_width | +8.6% | 45 / 0 | 0.0001 | 0.0013 * |
 
 ### binoculars_lite vs fast_detect_gpt
 
@@ -176,6 +207,96 @@
 | typo | -24.0% | 13 / 139 | 0.0001 | 0.0013 * |
 | whitespace_noise | +1.9% | 41 / 31 | 0.2835 | 0.8504 |
 | zero_width | -30.5% | 11 / 171 | 0.0001 | 0.0013 * |
+
+### deberta_hc3_ft vs fast_detect_gpt
+
+| Condition | Δ accuracy | only-A / only-B correct | p (perm) | p (Holm) |
+|---|---|---|---|---|
+| case_noise | -14.7% | 0 / 77 | 0.0001 | 0.0013 * |
+| clean | -2.5% | 11 / 33 | 0.0013 | 0.0078 * |
+| contraction_expand | -4.0% | 7 / 28 | 0.0005 | 0.0035 * |
+| esl_student | +4.7% | 29 / 15 | 0.0459 | 0.1836 |
+| grammar_correct | -1.4% | 27 / 39 | 0.1763 | 0.2550 |
+| homoglyph | -27.9% | 5 / 151 | 0.0001 | 0.0013 * |
+| launder_lite | +13.3% | 60 / 20 | 0.0001 | 0.0013 * |
+| light_human_edit | -3.3% | 9 / 19 | 0.0850 | 0.2550 |
+| paraphrase_t5 | +11.4% | 119 / 20 | 0.0001 | 0.0013 * |
+| roundtrip_fr | +3.7% | 27 / 16 | 0.1202 | 0.2550 |
+| typo | -16.2% | 25 / 110 | 0.0001 | 0.0013 * |
+| whitespace_noise | +4.2% | 41 / 19 | 0.0073 | 0.0365 * |
+| zero_width | -13.2% | 0 / 69 | 0.0001 | 0.0013 * |
+
+### deberta_hc3_ft vs perplexity
+
+| Condition | Δ accuracy | only-A / only-B correct | p (perm) | p (Holm) |
+|---|---|---|---|---|
+| case_noise | +0.0% | 0 / 0 | 1.0000 | 1.0000 |
+| clean | -2.0% | 9 / 26 | 0.0050 | 0.0350 * |
+| contraction_expand | -2.7% | 8 / 22 | 0.0153 | 0.0918 |
+| esl_student | +3.0% | 21 / 12 | 0.1647 | 0.6431 |
+| grammar_correct | -1.4% | 20 / 32 | 0.1263 | 0.6314 |
+| homoglyph | +3.4% | 20 / 2 | 0.0002 | 0.0020 * |
+| launder_lite | +6.7% | 29 / 9 | 0.0017 | 0.0153 * |
+| light_human_edit | -4.3% | 2 / 15 | 0.0023 | 0.0184 * |
+| paraphrase_t5 | +8.4% | 92 / 19 | 0.0001 | 0.0013 * |
+| roundtrip_fr | +3.0% | 21 / 12 | 0.1608 | 0.6431 |
+| typo | +8.0% | 66 / 24 | 0.0001 | 0.0013 * |
+| whitespace_noise | +9.4% | 61 / 12 | 0.0001 | 0.0013 * |
+| zero_width | -0.2% | 0 / 1 | 1.0000 | 1.0000 |
+
+### deberta_hc3_ft vs roberta_openai
+
+| Condition | Δ accuracy | only-A / only-B correct | p (perm) | p (Holm) |
+|---|---|---|---|---|
+| case_noise | +0.0% | 0 / 0 | 1.0000 | 1.0000 |
+| clean | +2.9% | 46 / 21 | 0.0022 | 0.0088 * |
+| contraction_expand | +4.6% | 41 / 17 | 0.0029 | 0.0088 * |
+| esl_student | +12.7% | 47 / 9 | 0.0001 | 0.0013 * |
+| grammar_correct | +5.7% | 77 / 28 | 0.0001 | 0.0013 * |
+| homoglyph | +4.0% | 22 / 1 | 0.0001 | 0.0013 * |
+| launder_lite | +22.0% | 83 / 17 | 0.0001 | 0.0013 * |
+| light_human_edit | +8.7% | 40 / 14 | 0.0005 | 0.0025 * |
+| paraphrase_t5 | +22.3% | 204 / 11 | 0.0001 | 0.0013 * |
+| roundtrip_fr | +18.3% | 64 / 9 | 0.0001 | 0.0013 * |
+| typo | +13.7% | 74 / 2 | 0.0001 | 0.0013 * |
+| whitespace_noise | +28.1% | 155 / 8 | 0.0001 | 0.0013 * |
+| zero_width | +0.0% | 0 / 0 | 1.0000 | 1.0000 |
+
+### deberta_hc3_ft vs stylometric_gbm
+
+| Condition | Δ accuracy | only-A / only-B correct | p (perm) | p (Holm) |
+|---|---|---|---|---|
+| case_noise | -31.9% | 4 / 171 | 0.0001 | 0.0013 * |
+| clean | +6.8% | 77 / 18 | 0.0001 | 0.0013 * |
+| contraction_expand | +12.0% | 77 / 14 | 0.0001 | 0.0013 * |
+| esl_student | +15.7% | 56 / 9 | 0.0001 | 0.0013 * |
+| grammar_correct | +6.4% | 79 / 24 | 0.0001 | 0.0013 * |
+| homoglyph | -20.4% | 12 / 119 | 0.0001 | 0.0013 * |
+| launder_lite | +9.3% | 49 / 21 | 0.0013 | 0.0013 * |
+| light_human_edit | +11.7% | 46 / 11 | 0.0001 | 0.0013 * |
+| paraphrase_t5 | +11.9% | 115 / 12 | 0.0001 | 0.0013 * |
+| roundtrip_fr | +14.0% | 50 / 8 | 0.0001 | 0.0013 * |
+| typo | -14.7% | 35 / 112 | 0.0001 | 0.0013 * |
+| whitespace_noise | +12.0% | 76 / 13 | 0.0001 | 0.0013 * |
+| zero_width | -19.3% | 1 / 102 | 0.0001 | 0.0013 * |
+
+### deberta_hc3_ft vs tfidf_logreg
+
+| Condition | Δ accuracy | only-A / only-B correct | p (perm) | p (Holm) |
+|---|---|---|---|---|
+| case_noise | -39.5% | 1 / 208 | 0.0001 | 0.0013 * |
+| clean | +2.5% | 49 / 27 | 0.0146 | 0.0846 |
+| contraction_expand | +4.4% | 44 / 21 | 0.0059 | 0.0472 * |
+| esl_student | +5.3% | 31 / 15 | 0.0228 | 0.0912 |
+| grammar_correct | +2.1% | 53 / 35 | 0.0682 | 0.1296 |
+| homoglyph | -36.1% | 4 / 193 | 0.0001 | 0.0013 * |
+| launder_lite | +7.0% | 44 / 23 | 0.0141 | 0.0846 |
+| light_human_edit | +4.7% | 27 / 13 | 0.0357 | 0.1071 |
+| paraphrase_t5 | +14.7% | 138 / 11 | 0.0001 | 0.0013 * |
+| roundtrip_fr | +4.3% | 28 / 15 | 0.0648 | 0.1296 |
+| typo | -25.6% | 9 / 143 | 0.0001 | 0.0013 * |
+| whitespace_noise | +4.4% | 45 / 22 | 0.0064 | 0.0472 * |
+| zero_width | -39.1% | 3 / 208 | 0.0001 | 0.0013 * |
 
 ### fast_detect_gpt vs perplexity
 

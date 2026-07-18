@@ -16,7 +16,12 @@ from stress_test.detectors.base import Detector
 def _clf_pipeline(model_name: str):
     from transformers import pipeline
 
-    return pipeline("text-classification", model=model_name, truncation=True, top_k=None)
+    # max_length must be explicit: DeBERTa-v3's tokenizer has no real
+    # model_max_length, so bare truncation=True truncates nothing and long
+    # docs OOM the O(L^2) disentangled attention on small GPUs
+    return pipeline(
+        "text-classification", model=model_name, truncation=True, max_length=512, top_k=None
+    )
 
 
 class TransformerDetector(Detector):
@@ -37,7 +42,7 @@ class TransformerDetector(Detector):
 
     def score(self, texts: list[str]) -> np.ndarray:
         pipe = _clf_pipeline(self.model_name)
-        results = pipe(texts, batch_size=16)
+        results = pipe(texts, batch_size=8)
         out = []
         for scores in results:
             by_label = {r["label"]: r["score"] for r in scores}
