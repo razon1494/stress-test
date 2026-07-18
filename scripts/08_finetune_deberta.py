@@ -56,7 +56,7 @@ def main() -> None:
         num_labels=2,
         id2label={0: "human", 1: "machine"},
         label2id={"human": 0, "machine": 1},
-    )
+    ).float()  # master weights must be fp32; mixed precision is handled by Trainer
 
     class DetectionDataset(torch.utils.data.Dataset):
         def __init__(self, recs):
@@ -85,7 +85,9 @@ def main() -> None:
         per_device_eval_batch_size=args.batch * 4,
         gradient_accumulation_steps=2,
         learning_rate=args.lr,
-        fp16=torch.cuda.is_available(),
+        # bf16 needs no grad scaler (avoids the fp16 unscale crash) and is
+        # supported on Ada-generation GPUs like the RTX 4050
+        bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported(),
         eval_strategy="epoch",
         save_strategy="epoch",
         load_best_model_at_end=True,
