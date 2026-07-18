@@ -7,7 +7,7 @@ import argparse
 from pathlib import Path
 
 from stress_test.data import build_manifest, save_manifest
-from stress_test.data.non_native import load_liang_toefl
+from stress_test.data.non_native import load_liang_toefl, load_wi_locness
 from stress_test.data.sources import load_hc3, write_jsonl
 
 
@@ -20,11 +20,15 @@ def main() -> None:
     parser.add_argument("--holdout-domains", nargs="*", default=[])
     parser.add_argument("--include-fairness-subset", action="store_true",
                         help="add the Liang et al. TOEFL/native-essay corpus (fairness/FAR analysis)")
+    parser.add_argument("--wi-locness-per-band", type=int, default=0,
+                        help="add N essays per CEFR band (A/B/C/N) from W&I+LOCNESS (0 = skip)")
     args = parser.parse_args()
 
     records = list(load_hc3(max_per_domain=args.hc3_per_domain))
     if args.include_fairness_subset:
         records += list(load_liang_toefl())
+    if args.wi_locness_per_band:
+        records += list(load_wi_locness(per_band=args.wi_locness_per_band))
     # drop the WHOLE pair if either side is too short: detection on tiny texts
     # is noise, and asymmetric filtering would break the matched-pair design
     too_short = {r.doc_id for r in records if len(r.text.split()) < args.min_words}
@@ -37,6 +41,8 @@ def main() -> None:
     holdout_domains = set(args.holdout_domains)
     if args.include_fairness_subset:
         holdout_domains |= {"toefl", "student_essay"}
+    if args.wi_locness_per_band:
+        holdout_domains |= {"wi_learner", "locness"}
     manifest = build_manifest(
         records,
         holdout_generators=tuple(args.holdout_generators),

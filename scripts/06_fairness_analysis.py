@@ -38,20 +38,29 @@ def main() -> None:
     parser.add_argument("--cache", default="results/cache")
     parser.add_argument("--data", default="data/processed")
     parser.add_argument("--out", default="results")
-    parser.add_argument("--conditions", nargs="*", default=["clean", "grammar_correct"])
+    parser.add_argument("--conditions", nargs="*",
+                        default=["clean", "grammar_correct", "human_edit"])
     args = parser.parse_args()
 
     cache = Path(args.cache)
     summary = json.loads((cache / "summary.json").read_text())
     fairness_records = [
         r for r in load_jsonl(Path(args.data) / "clean.jsonl")
-        if r.domain in ("toefl", "student_essay")
+        if r.domain in ("toefl", "student_essay", "wi_learner", "locness")
     ]
     doc_native = {r.doc_id: bool(r.meta["native"]) for r in fairness_records}
+    # CEFR proficiency band (A/B/C from W&I, N for LOCNESS natives) — coarse
+    # band letter only, so A2.i and A2.ii pool together
+    doc_band = {
+        r.doc_id: (r.meta.get("cefr") or "")[:1]
+        for r in fairness_records
+        if r.source_dataset == "wi_locness" and r.meta.get("cefr")
+    }
     if not doc_native:
         raise SystemExit(
-            "no toefl/student_essay records in data/processed/clean.jsonl — "
-            "rerun scripts/01_build_dataset.py with --include-fairness-subset"
+            "no fairness-subset records in data/processed/clean.jsonl — "
+            "rerun scripts/01_build_dataset.py with --include-fairness-subset "
+            "and/or --wi-locness-per-band N"
         )
 
     lines = ["# Fairness Analysis: Native vs Non-Native False-Accusation Rate", "",
@@ -80,6 +89,32 @@ def main() -> None:
                 f"| {non['point']:.1%} [{non['ci_low']:.1%}, {non['ci_high']:.1%}] ({non['n']}) "
                 f"| {gap:+.1%} |"
             )
+
+    if doc_band:
+        bands = sorted(set(doc_band.values()))
+        lines += ["", "## FAR by CEFR proficiency band (W&I+LOCNESS; N = native)", "",
+                  "| Detector | Condition | " + " | ".join(bands) + " |",
+                  "|---|---|" + "---|" * len(bands)]
+        for detector, det_payload in summary.items():
+            threshold = det_payload["threshold"]
+            for condition in args.conditions:
+                path = cache / f"{detector}__{condition}.csv"
+                if not path.exists():
+                    continue
+                df = pd.read_csv(path)
+                df = df[df["doc_id"].isin(doc_band)].copy()
+                if df.empty:
+                    continue
+                df["band"] = df["doc_id"].map(doc_band)
+                cells = []
+                for band in bands:
+                    subset = df[df["band"] == band]
+                    if subset.empty:
+                        cells.append("—")
+                    else:
+                        far = float((subset["score"] > threshold).mean())
+                        cells.append(f"{far:.1%} ({len(subset)})")
+                lines.append(f"| {detector} | {condition} | " + " | ".join(cells) + " |")
 
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
