@@ -34,6 +34,13 @@ def build_detectors(only: list[str] | None = None) -> list:
         from stress_test.detectors.zero_shot import BinocularsLite, FastDetectGPT, PerplexityDetector
 
         detectors += [PerplexityDetector(), FastDetectGPT(), BinocularsLite(), TransformerDetector()]
+        finetuned = Path("models/deberta_hc3")
+        if finetuned.exists():
+            detectors.append(
+                TransformerDetector(
+                    model_name=str(finetuned), machine_label="machine", name="deberta_hc3_ft"
+                )
+            )
     else:
         print("torch not installed: skipping model-backed detectors")
     if only:
@@ -63,7 +70,10 @@ def main() -> None:
 
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
-    summary = {}
+    # merge into the existing summary so a partial rerun (--only) never wipes
+    # the cached results of detectors that were not re-scored
+    summary_path = out_dir / "summary.json"
+    summary = json.loads(summary_path.read_text()) if summary_path.exists() else {}
     for detector in build_detectors(only=args.only):
         detector.fit([r.text for r in train], np.array([r.label for r in train]))
         clean_scores = detector.score([r.text for r in test_clean])
@@ -83,7 +93,7 @@ def main() -> None:
             )
             print(f"{detector.name} / {name}: {summary[detector.name]['conditions'][name]}")
 
-    (out_dir / "summary.json").write_text(json.dumps(summary, indent=2))
+    summary_path.write_text(json.dumps(summary, indent=2))
 
 
 if __name__ == "__main__":

@@ -22,3 +22,6 @@ wandb/
 # repo has no LICENSE file either, so neither is committed — see
 # src/stress_test/data/non_native.py
 data/external/
+
+# fine-tuned model weights (regenerate via scripts/08_finetune_deberta.py)
+models/

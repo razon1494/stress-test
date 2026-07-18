@@ -20,19 +20,20 @@ def _clf_pipeline(model_name: str):
 
 
 class TransformerDetector(Detector):
-    """Wraps any HF text-classification detector checkpoint. ``machine_label``
-    is the class name that means 'machine-generated' for that checkpoint
-    (the OpenAI RoBERTa detector uses 'Fake')."""
-
-    name = "roberta_openai"
+    """Wraps any HF text-classification detector checkpoint — pretrained hub
+    models or a local fine-tune. ``machine_label`` is the class name that means
+    'machine-generated' for that checkpoint (the OpenAI RoBERTa detector uses
+    'Fake'; our own fine-tunes use 'machine')."""
 
     def __init__(
         self,
         model_name: str = "openai-community/roberta-base-openai-detector",
         machine_label: str = "Fake",
+        name: str = "roberta_openai",
     ):
         self.model_name = model_name
         self.machine_label = machine_label
+        self.name = name
 
     def score(self, texts: list[str]) -> np.ndarray:
         pipe = _clf_pipeline(self.model_name)
