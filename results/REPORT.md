@@ -2,13 +2,13 @@
 
 | Detector | Clean TPR | RS | WCP | FAR (worst) | HCI |
 |---|---|---|---|---|---|
-| deberta_hc3_ft | 72.1% | nan | 56.7% | 5.7% | -0.017 |
-| binoculars_lite | 99.6% | nan | 49.3% | 7.8% | 0.149 |
-| tfidf_logreg | 57.3% | nan | 34.7% | 2.7% | -0.017 |
-| perplexity | 88.2% | nan | 30.0% | 3.0% | 0.000 |
-| fast_detect_gpt | 95.0% | nan | 29.3% | 5.0% | 0.008 |
-| roberta_openai | 51.9% | nan | 20.0% | 8.1% | -0.039 |
-| stylometric_gbm | 24.4% | nan | 16.0% | 1.1% | 0.000 |
+| deberta_hc3_ft | 72.1% | 0.667 | 56.7% | 5.7% | -0.017 |
+| binoculars_lite | 99.6% | 0.667 | 49.3% | 7.8% | 0.149 |
+| tfidf_logreg | 57.3% | 0.911 | 34.7% | 2.7% | -0.017 |
+| perplexity | 88.2% | 0.493 | 30.0% | 3.0% | 0.000 |
+| fast_detect_gpt | 95.0% | 0.621 | 29.3% | 5.0% | 0.008 |
+| roberta_openai | 51.9% | 0.455 | 20.0% | 8.1% | -0.039 |
+| stylometric_gbm | 24.4% | 0.754 | 16.0% | 1.1% | 0.000 |
 
 ## Reliability Card — tfidf_logreg
 
@@ -17,8 +17,8 @@
 | Axis | Value | Meaning |
 |---|---|---|
 | Clean TPR @ 1% FPR | 57.3% | headline number everyone else reports |
-| Robustness Score (RS) | nan | mean retained performance across transforms |
-| Transformation Stability (TS) | nan | 1 = uniform across transforms, low = fragile |
+| Robustness Score (RS) | 0.911 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.822 | 1 = uniform across transforms, low = fragile |
 | Worst-Case Perf (WCP) | 34.7% | on `launder_lite` — what deployers should assume |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
 | False-Accusation Rate, worst | 2.7% | on `launder_lite` — the social-cost number |
@@ -33,8 +33,8 @@
 | Axis | Value | Meaning |
 |---|---|---|
 | Clean TPR @ 1% FPR | 24.4% | headline number everyone else reports |
-| Robustness Score (RS) | nan | mean retained performance across transforms |
-| Transformation Stability (TS) | nan | 1 = uniform across transforms, low = fragile |
+| Robustness Score (RS) | 0.754 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.691 | 1 = uniform across transforms, low = fragile |
 | Worst-Case Perf (WCP) | 16.0% | on `launder_lite` — what deployers should assume |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
 | False-Accusation Rate, worst | 1.1% | on `human_edit` — the social-cost number |
@@ -49,8 +49,8 @@
 | Axis | Value | Meaning |
 |---|---|---|
 | Clean TPR @ 1% FPR | 88.2% | headline number everyone else reports |
-| Robustness Score (RS) | nan | mean retained performance across transforms |
-| Transformation Stability (TS) | nan | 1 = uniform across transforms, low = fragile |
+| Robustness Score (RS) | 0.493 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.196 | 1 = uniform across transforms, low = fragile |
 | Worst-Case Perf (WCP) | 30.0% | on `launder_lite` — what deployers should assume |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
 | False-Accusation Rate, worst | 3.0% | on `human_edit` — the social-cost number |
@@ -65,8 +65,8 @@
 | Axis | Value | Meaning |
 |---|---|---|
 | Clean TPR @ 1% FPR | 95.0% | headline number everyone else reports |
-| Robustness Score (RS) | nan | mean retained performance across transforms |
-| Transformation Stability (TS) | nan | 1 = uniform across transforms, low = fragile |
+| Robustness Score (RS) | 0.621 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.546 | 1 = uniform across transforms, low = fragile |
 | Worst-Case Perf (WCP) | 29.3% | on `launder_lite` — what deployers should assume |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
 | False-Accusation Rate, worst | 5.0% | on `paraphrase_t5` — the social-cost number |
@@ -81,8 +81,8 @@
 | Axis | Value | Meaning |
 |---|---|---|
 | Clean TPR @ 1% FPR | 99.6% | headline number everyone else reports |
-| Robustness Score (RS) | nan | mean retained performance across transforms |
-| Transformation Stability (TS) | nan | 1 = uniform across transforms, low = fragile |
+| Robustness Score (RS) | 0.667 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.553 | 1 = uniform across transforms, low = fragile |
 | Worst-Case Perf (WCP) | 49.3% | on `launder_lite` — what deployers should assume |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
 | False-Accusation Rate, worst | 7.8% | on `paraphrase_t5` — the social-cost number |
@@ -97,8 +97,8 @@
 | Axis | Value | Meaning |
 |---|---|---|
 | Clean TPR @ 1% FPR | 51.9% | headline number everyone else reports |
-| Robustness Score (RS) | nan | mean retained performance across transforms |
-| Transformation Stability (TS) | nan | 1 = uniform across transforms, low = fragile |
+| Robustness Score (RS) | 0.455 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.180 | 1 = uniform across transforms, low = fragile |
 | Worst-Case Perf (WCP) | 20.0% | on `launder_lite` — what deployers should assume |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
 | False-Accusation Rate, worst | 8.1% | on `paraphrase_t5` — the social-cost number |
@@ -113,8 +113,8 @@
 | Axis | Value | Meaning |
 |---|---|---|
 | Clean TPR @ 1% FPR | 72.1% | headline number everyone else reports |
-| Robustness Score (RS) | nan | mean retained performance across transforms |
-| Transformation Stability (TS) | nan | 1 = uniform across transforms, low = fragile |
+| Robustness Score (RS) | 0.667 | mean retained performance across transforms |
+| Transformation Stability (TS) | 0.346 | 1 = uniform across transforms, low = fragile |
 | Worst-Case Perf (WCP) | 56.7% | on `launder_lite` — what deployers should assume |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
 | False-Accusation Rate, worst | 5.7% | on `human_edit` — the social-cost number |

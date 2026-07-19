@@ -44,7 +44,12 @@ def main() -> None:
         conditions = payload["conditions"]
         threshold = payload["threshold"]
         clean = conditions["clean"]
-        transformed_tpr = {n: c["tpr"] for n, c in conditions.items() if n != "clean"}
+        # human-only conditions (e.g. human_edit) have no machine rows, so
+        # their TPR is NaN — exclude them from RS/TS/WCP, keep them for FAR
+        transformed_tpr = {
+            n: c["tpr"] for n, c in conditions.items()
+            if n != "clean" and not np.isnan(c["tpr"])
+        }
         results = {"clean_tpr": clean["tpr"], "far_clean": clean["fpr"]}
 
         qaes_values = []
