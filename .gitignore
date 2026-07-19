@@ -25,3 +25,4 @@ data/external/
 
 # fine-tuned model weights (regenerate via scripts/08_finetune_deberta.py)
 models/
+annotation/

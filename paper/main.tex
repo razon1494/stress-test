@@ -1,9 +1,6 @@
 % STRESS-Test — arXiv draft v0.1
 % Build: pdflatex main && bibtex main && pdflatex main && pdflatex main
 % (or upload the paper/ folder to Overleaf)
-%
-% Numbers marked \todo{} await the per-domain-calibration reanalysis
-% (post-processing only, no GPU; see Sec. 6 "Calibration-pool sensitivity").
 % All other numbers are from results/ at repo commit 801a32f.
 
 \documentclass[11pt]{article}
@@ -42,10 +39,10 @@ seven detector families across fifteen conditions, including composed
 ``laundering'' pipelines, and---critically---transformations applied to
 \emph{human} text, including 3{,}200+ essays by non-native English writers
 across ten countries and four proficiency bands. Our findings: (1) headline
-accuracy and reliability rank detectors in nearly opposite orders---the best
-clean-text detector (Binoculars, 99.6\% TPR) loses over half its detection rate
-under a depth-2 paraphrase-translate pipeline, while trivial character
-perturbations drive perplexity-family detectors from $\geq$88\% to
+accuracy and reliability rank detectors in nearly opposite orders---the
+strongest clean-text detectors (97--98\% TPR) lose half or more of their
+detection rate under a depth-2 paraphrase--translate pipeline, while trivial
+character perturbations drive perplexity-family detectors from $\geq$93\% to
 $\leq$1\% TPR; (2) evaluating attacked human text with threshold-free metrics,
 as prior benchmarks do, hides a false-accusation problem: at frozen deployed
 thresholds, grammar correction raises the false-positive rate on non-native
@@ -214,40 +211,46 @@ accuracy; 3 epochs, bf16, single RTX 4050).
 \subsection{Reliability inverts the leaderboard}
 \label{sec:inversion}
 
-Table~\ref{tab:leaderboard} shows the reliability cards. Ranked by clean TPR,
-Binoculars-lite leads (99.6\%); ranked by worst-case pipeline performance and
-false-accusation risk, the supervised DeBERTa fine-tune leads and the ranking
-roughly inverts. TF-IDF, weakest-but-one on clean text, has the highest
-robustness score (0.91): the transformations that defeat likelihood-based
-detectors barely move it.
+Table~\ref{tab:leaderboard} shows the reliability cards under per-domain
+calibration (one threshold per detector per domain; every detector's realized
+clean FPR is 0.7--0.8\%, so rows are directly comparable). Ranked by clean
+TPR, Fast-DetectGPT leads (97.7\%); ranked by worst-case pipeline performance
+the ranking inverts: the supervised DeBERTa fine-tune retains 78.7\% under the
+worst pipeline while the two strongest clean-text detectors retain 44--47\%.
+TF-IDF and the stylometric baseline have the highest robustness scores
+(0.96/0.92): the transformations that defeat likelihood-based detectors barely
+move them---at the price of far lower clean detection.
 
 \begin{table}[t]
 \centering
 \small
 \begin{tabular}{lccccc}
 \toprule
-Detector & Clean TPR & RS & WCP & FAR (worst) & HCI \\
+Detector & Clean TPR & RS & WCP & FAR gram.\ & FAR edit \\
 \midrule
-DeBERTa-v3 (ours, ft) & 72.1\% & 0.67 & \textbf{56.7\%} & 5.7\% & $-0.02$ \\
-Binoculars-lite       & \textbf{99.6\%} & 0.67 & 49.3\% & 7.8\% & $0.15$ \\
-TF-IDF + LR           & 57.3\% & \textbf{0.91} & 34.7\% & 2.7\% & $-0.02$ \\
-Perplexity (GPT-2)    & 88.2\% & 0.49 & 30.0\% & 3.0\% & $0.00$ \\
-Fast-DetectGPT        & 95.0\% & 0.62 & 29.3\% & 5.0\% & $0.01$ \\
-RoBERTa (OpenAI)      & 51.9\% & 0.46 & 20.0\% & \textbf{8.1\%} & $-0.04$ \\
-Stylometric GBM       & 24.4\% & 0.75 & 16.0\% & 1.1\% & $0.00$ \\
+Fast-DetectGPT        & \textbf{97.7\%} & 0.73 & 46.7\% & 2.6\% & 3.4\% \\
+Binoculars-lite       & 96.9\% & 0.63 & 44.0\% & 4.1\% & 7.4\% \\
+DeBERTa-v3 (ours, ft) & 93.1\% & 0.83 & \textbf{78.7\%} & 4.0\% & 8.0\% \\
+Perplexity (GPT-2)    & 93.1\% & 0.64 & 62.0\% & 5.7\% & 6.4\% \\
+RoBERTa (OpenAI)      & 85.9\% & 0.55 & 53.3\% & \textbf{6.0\%} & 6.7\% \\
+TF-IDF + LR           & 79.4\% & \textbf{0.96} & 63.3\% & 1.9\% & 1.1\% \\
+Stylometric GBM       & 55.7\% & 0.92 & 50.7\% & 0.8\% & 1.2\% \\
 \bottomrule
 \end{tabular}
-\caption{Reliability cards at frozen 1\%-FPR thresholds (pooled calibration;
-see \S\ref{sec:calibration} for calibration-pool sensitivity). WCP = minimum
-TPR over named realistic pipelines. \todo{refresh under per-domain calibration}}
+\caption{Reliability cards, per-domain calibration at target 1\% FPR (realized
+clean FPR 0.7--0.8\% for every detector). WCP = minimum TPR over named
+realistic pipelines (worst is \texttt{launder\_lite} for all). FAR columns:
+false-positive rate on grammar-corrected and gold-human-edited human text at
+the frozen thresholds---5--8$\times$ the calibrated rate for the
+likelihood-based and neural detectors.}
 \label{tab:leaderboard}
 \end{table}
 
 \paragraph{Mechanism asymmetry.} Character-level noise that any normalizer
 would remove is catastrophic for likelihood-based detectors: swapping the case
-of $\sim$2\% of characters drives GPT-2 perplexity from 94\% to \textbf{0.0\%}
-TPR, zero-width spaces to 0.4\%, homoglyphs to 1.5\% (all $p < 0.001$ after
-Holm correction vs.\ TF-IDF, which is essentially unaffected). The same noise
+of $\sim$2\% of characters drives GPT-2 perplexity from 93\% to \textbf{0.0\%}
+TPR, zero-width spaces to $<$1\%, homoglyphs to $\sim$2\% (all $p < 0.001$
+after Holm correction vs.\ TF-IDF, which is essentially unaffected). The same noise
 zeroes out both subword-token classifiers (RoBERTa, DeBERTa). Conversely,
 semantic transforms (paraphrase, translation) degrade TF-IDF and spare the
 DeBERTa fine-tune (87\% TPR under paraphrase---though in-domain training
@@ -265,7 +268,10 @@ benign. At frozen thresholds the picture reverses. Grammar-correcting human
 text---the signature action of an innocent student using a writing
 tool---raises FAR on non-native learner text from $\leq$1\% to 2.9--15.3\%
 depending on detector, while native essayists in the same corpus remain at
-0\%.
+0\%. (Fairness tables use the single pooled deployed threshold per detector,
+matching the deployment scenario in which one tool serves every writer; the
+per-domain regime of Table~\ref{tab:leaderboard} shows the same 5--8$\times$
+aggregate FAR inflation.)
 
 \begin{table}[t]
 \centering
@@ -307,28 +313,45 @@ $\pm$3--5pp CIs.
 On ICNALE's topic-controlled opinion essays the pattern \emph{inverts}:
 native-speaker reference essays (ENS) are flagged \emph{most} (RoBERTa:
 9\%$\to$19\% under grammar correction; perplexity: 11\%$\to$17\%), exceeding
-every learner group in the same corpus. We reconcile the TOEFL/W\&I and
-ICNALE results with a register account consistent with
-\citet{liang2023gpt}'s perplexity-mediation evidence: detectors penalize
-\emph{statistically predictable} text. Limited L2 vocabulary lowers
-perplexity; so does fluent native prose written to a short, formulaic prompt.
-Who bears the false-accusation burden is therefore a property of the writing
-task---an uncomfortable conclusion for the highest-stakes deployment,
-education, where formulaic prompts are the norm.
-\todo{add perplexity-distribution-by-corpus figure to substantiate mediation}
+every learner group in the same corpus. Figure~\ref{fig:register} shows why:
+by median GPT-2 negative log-likelihood, ICNALE's \emph{native} prompt essays
+(2.81) sit closer to ChatGPT text (2.18) than any learner group does---closer
+even than the non-native TOEFL essays (3.11)---while open-register human
+writing is furthest (3.59). This reconciles the TOEFL/W\&I and ICNALE results
+under a register account consistent with \citet{liang2023gpt}'s
+perplexity-mediation evidence: detectors penalize \emph{statistically
+predictable} text. Limited L2 vocabulary lowers perplexity; so does fluent
+native prose written to a short, formulaic prompt. Who bears the
+false-accusation burden is therefore a property of the writing task---an
+uncomfortable conclusion for the highest-stakes deployment, education, where
+formulaic prompts are the norm.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/perplexity_by_corpus.pdf}
+\caption{GPT-2 mean token negative log-likelihood by corpus group (boxes:
+IQR; whiskers: 5th--95th percentile). Predictability, not nativeness,
+determines proximity to the machine-text region: native writers of
+topic-controlled prompt essays are \emph{more} machine-like than non-native
+TOEFL writers.}
+\label{fig:register}
+\end{figure}
 
 \subsection{Quality-adjusted evasion and composition}
 \label{sec:qaes}
 
 Composed pipelines are the worst case for every detector
 (Table~\ref{tab:leaderboard}), but composition also destroys meaning: only
-77--82\% of depth-2 outputs retain embedding similarity $\geq 0.85$ to the
-original, against 94--95\% for single transforms. \qaes{} discounts
-accordingly (e.g., perplexity under \texttt{launder\_lite}: raw evasion 54.0\%
-vs.\ \qaes{} 50.4\% on the 150-pair development subsample)---modest here, but
-the machinery matters for attack papers whose raw success rates conflate
-evading the detector with destroying the text.
-\todo{full-split QAES table + human validation of the 0.85 threshold}
+82\% of depth-2 \texttt{launder\_lite} outputs retain embedding similarity
+$\geq 0.85$ to the original, against 94--96\% for single transforms, and
+\qaes{} discounts evasion accordingly (e.g., perplexity under
+\texttt{launder\_lite}: raw evasion 54.0\% vs.\ \qaes{} 50.4\%). The
+correction is modest on our conditions---by design, since our transforms
+target meaning preservation---but the machinery matters for attack papers
+whose raw success rates conflate evading the detector with destroying the
+text. The 0.85 similarity threshold is provisional pending the human
+validation round (600 stratified pairs, 3 annotators, 200-pair overlap for
+Krippendorff's $\alpha$; materials released with the benchmark).
 
 \subsection{Hardness is detector-relative}
 \label{sec:hardness}
@@ -349,12 +372,16 @@ $H(x)$ implicitly favour the detector family their signals resemble.
 \label{sec:calibration}
 
 Freezing FPR requires choosing \emph{whose} human text defines the threshold.
-Moving from an HC3-only calibration pool to one including learner and essay
-registers shifted thresholds enough to cut TF-IDF's clean TPR from 79.4\% to
-57.3\% and RoBERTa's from 78.6\% to 51.9\%, while Binoculars moved by
-$<$1pp. Deployed systems calibrated on convenience corpora inherit exactly
-this sensitivity. \todo{per-domain calibration reanalysis (RAID-style) from
-cached scores; report both pooled and per-domain cards}
+Under a single pooled threshold, moving the calibration pool from HC3-only to
+one including learner and essay registers cut TF-IDF's clean TPR from 79.4\%
+to 57.3\% and RoBERTa's from 78.6\% to 51.9\%, while Binoculars moved by
+$<$1pp---surface classifiers are hostage to calibration-pool composition in a
+way likelihood detectors are not. Per-domain calibration
+(Table~\ref{tab:leaderboard}, following \citealp{dugan2024raid}) removes the
+artifact: every detector then realizes 0.7--0.8\% clean FPR and recovers its
+in-register TPR. Deployed systems calibrated on convenience corpora inherit
+the pooled regime's sensitivity; we therefore report both regimes and
+recommend per-register calibration as deployment practice.
 
 \section{Limitations}
 \label{sec:limitations}
