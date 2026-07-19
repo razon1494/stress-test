@@ -1,76 +1,55 @@
 {
   "binoculars_lite": {
     "weights": {
-      "perplexity_closeness": 0.25578447396464166,
-      "readability_normality": 0.24603758870374595,
-      "semantic_consistency": 0.02225993768785746,
-      "lexical_diversity": 0.0934564706028674,
-      "committee_margin": 0.3824615290408876
+      "perplexity_closeness": 0.2786524370664317,
+      "readability_normality": 0.053872989101988705,
+      "semantic_consistency": 0.010569473066356048,
+      "lexical_diversity": 0.2254071591575467,
+      "committee_margin": 0.4314979416076769
     },
     "by_condition": {
       "clean": {
-        "hci": -0.017164653528289945,
+        "hci": -0.05371900826446285,
         "acc_by_quantile": [
-          0.975,
-          1.0,
-          1.0,
-          1.0,
-          0.9917355371900827
+          0.9333333333333333,
+          0.9916666666666667,
+          0.9916666666666667,
+          0.9916666666666667,
+          0.9834710743801653
         ]
       },
       "paraphrase_t5": {
-        "hci": 0.03369357914812461,
+        "hci": 0.14868719373948658,
         "acc_by_quantile": [
-          0.975,
-          0.9833333333333333,
-          0.975,
+          0.9416666666666667,
+          0.9666666666666667,
           0.95,
-          0.9421487603305785
+          0.95,
+          0.8016528925619835
         ]
       }
     }
   },
   "deberta_hc3_ft": {
     "weights": {
-      "perplexity_closeness": 0.1396991124511322,
-      "readability_normality": 0.16222307461444688,
-      "semantic_consistency": 0.09933995130512889,
-      "lexical_diversity": 0.5977064007897999,
-      "committee_margin": 0.0010314608394920734
+      "perplexity_closeness": 0.43157964365389895,
+      "readability_normality": 0.008601540605467159,
+      "semantic_consistency": 0.01687201281509945,
+      "lexical_diversity": 0.42757849645879525,
+      "committee_margin": 0.11536830646673907
     },
     "by_condition": {
       "clean": {
-        "hci": -0.025641025641025664,
+        "hci": -0.016949152542372933,
         "acc_by_quantile": [
-          0.975,
-          0.9916666666666667,
-          0.975,
+          0.9833333333333333,
+          1.0,
+          1.0,
           1.0,
           1.0
         ]
       },
       "paraphrase_t5": {
-        "hci": -0.03600944510035417,
-        "acc_by_quantile": [
-          0.9333333333333333,
-          0.9583333333333334,
-          0.9916666666666667,
-          0.9833333333333333,
-          0.9669421487603306
-        ]
-      }
-    }
-  },
-  "fast_detect_gpt": {
-    "weights": {
-      "perplexity_closeness": 0.37181039052548354,
-      "readability_normality": 0.01891482516159239,
-      "semantic_consistency": 0.021562412114082344,
-      "lexical_diversity": 0.24783632130304184,
-      "committee_margin": 0.33987605089580003
-    },
-    "by_condition": {
-      "clean": {
         "hci": -0.016949152542372933,
         "acc_by_quantile": [
           0.9833333333333333,
@@ -79,107 +58,128 @@
           1.0,
           1.0
         ]
+      }
+    }
+  },
+  "fast_detect_gpt": {
+    "weights": {
+      "perplexity_closeness": 0.19645878716177526,
+      "readability_normality": 0.10513576116209719,
+      "semantic_consistency": 0.009780362467698584,
+      "lexical_diversity": 0.3015715228678675,
+      "committee_margin": 0.38705356634056143
+    },
+    "by_condition": {
+      "clean": {
+        "hci": -0.03448275862068965,
+        "acc_by_quantile": [
+          0.9666666666666667,
+          0.9916666666666667,
+          1.0,
+          1.0,
+          1.0
+        ]
       },
       "paraphrase_t5": {
-        "hci": -0.01760689902982386,
+        "hci": 0.008264462809917335,
         "acc_by_quantile": [
-          0.9583333333333334,
-          0.9583333333333334,
+          0.9666666666666667,
           0.95,
-          0.9833333333333333,
-          0.9752066115702479
+          0.925,
+          0.95,
+          0.9586776859504132
         ]
       }
     }
   },
   "perplexity": {
     "weights": {
-      "perplexity_closeness": 0.28906853372915003,
-      "readability_normality": 0.14180717252991054,
-      "semantic_consistency": 0.044679857025544424,
-      "lexical_diversity": 0.10600983181829253,
-      "committee_margin": 0.41843460489710244
+      "perplexity_closeness": 0.0870069161341726,
+      "readability_normality": 0.3243463510677391,
+      "semantic_consistency": 0.067956524677263,
+      "lexical_diversity": 0.22271038520441414,
+      "committee_margin": 0.2979798229164111
     },
     "by_condition": {
       "clean": {
-        "hci": -0.025933314334568275,
+        "hci": -0.025641025641025664,
         "acc_by_quantile": [
-          0.9666666666666667,
-          0.9916666666666667,
-          0.9833333333333333,
-          0.9916666666666667,
-          0.9917355371900827
+          0.975,
+          1.0,
+          1.0,
+          1.0,
+          1.0
         ]
       },
       "paraphrase_t5": {
-        "hci": 0.008264462809917331,
+        "hci": 0.0,
         "acc_by_quantile": [
+          1.0,
+          0.9916666666666667,
           0.9833333333333333,
-          0.9833333333333333,
-          0.975,
-          0.9666666666666667,
-          0.9752066115702479
+          1.0,
+          1.0
         ]
       }
     }
   },
   "roberta_openai": {
     "weights": {
-      "perplexity_closeness": 0.034199512670547064,
-      "readability_normality": 0.03217001707323604,
-      "semantic_consistency": 0.5667022957872924,
-      "lexical_diversity": 0.237941176867497,
-      "committee_margin": 0.1289869976014276
+      "perplexity_closeness": 0.05670177656000342,
+      "readability_normality": 0.19754135919863294,
+      "semantic_consistency": 0.34147794885415017,
+      "lexical_diversity": 0.1549892342678511,
+      "committee_margin": 0.24928968111936237
     },
     "by_condition": {
       "clean": {
-        "hci": -0.025933314334568275,
+        "hci": -0.016949152542372933,
         "acc_by_quantile": [
-          0.9666666666666667,
           0.9833333333333333,
-          0.9916666666666667,
           1.0,
-          0.9917355371900827
+          1.0,
+          1.0,
+          1.0
         ]
       },
       "paraphrase_t5": {
-        "hci": -0.20586025544703246,
+        "hci": -0.03941513032422119,
         "acc_by_quantile": [
-          0.7333333333333333,
-          0.8083333333333333,
-          0.85,
-          0.8166666666666667,
-          0.8842975206611571
+          0.8666666666666667,
+          0.9416666666666667,
+          0.9333333333333333,
+          0.95,
+          0.9008264462809917
         ]
       }
     }
   },
   "stylometric_gbm": {
     "weights": {
-      "perplexity_closeness": 0.02536747469353552,
-      "readability_normality": 0.5084937516745561,
-      "semantic_consistency": 0.06842874629741001,
-      "lexical_diversity": 0.31711342564807593,
-      "committee_margin": 0.08059660168642245
+      "perplexity_closeness": 0.2,
+      "readability_normality": 0.2,
+      "semantic_consistency": 0.2,
+      "lexical_diversity": 0.2,
+      "committee_margin": 0.2
     },
     "by_condition": {
       "clean": {
-        "hci": -0.008403361344537785,
+        "hci": 0.0,
         "acc_by_quantile": [
-          0.9916666666666667,
-          0.9833333333333333,
-          0.9833333333333333,
+          1.0,
+          1.0,
+          1.0,
           1.0,
           1.0
         ]
       },
       "paraphrase_t5": {
-        "hci": -0.043478260869565175,
+        "hci": 0.0,
         "acc_by_quantile": [
-          0.9583333333333334,
-          0.975,
-          0.9916666666666667,
-          0.9916666666666667,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
           1.0
         ]
       }
@@ -187,31 +187,31 @@
   },
   "tfidf_logreg": {
     "weights": {
-      "perplexity_closeness": 0.31657227554404893,
-      "readability_normality": 0.0994796129442462,
-      "semantic_consistency": 0.14573673967829284,
-      "lexical_diversity": 0.22647154730012123,
-      "committee_margin": 0.21173982453329088
+      "perplexity_closeness": 0.32895775859014564,
+      "readability_normality": 0.23360454140989842,
+      "semantic_consistency": 0.13061459850765544,
+      "lexical_diversity": 0.24125237864529436,
+      "committee_margin": 0.06557072284700609
     },
     "by_condition": {
       "clean": {
-        "hci": -0.008403361344537785,
+        "hci": 0.0,
         "acc_by_quantile": [
+          1.0,
+          1.0,
           0.9916666666666667,
-          1.0,
-          1.0,
           1.0,
           1.0
         ]
       },
       "paraphrase_t5": {
-        "hci": -0.07287753568745314,
+        "hci": -0.016949152542372933,
         "acc_by_quantile": [
-          0.9166666666666666,
-          0.95,
-          0.9669421487603306,
-          0.9915966386554622,
-          0.9834710743801653
+          0.9833333333333333,
+          0.9833333333333333,
+          0.9583333333333334,
+          1.0,
+          1.0
         ]
       }
     }
