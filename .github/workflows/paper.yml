@@ -1,0 +1,19 @@
+name: paper
+on:
+  push:
+    branches: [main]
+    paths: ["paper/**"]
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: paper
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stress-test-paper
+          path: paper/main.pdf

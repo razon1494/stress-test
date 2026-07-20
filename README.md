@@ -1,8 +1,30 @@
 # STRESS-Test
 
+![tests](https://github.com/razon1494/stress-test/actions/workflows/ci.yml/badge.svg)
+![paper](https://github.com/razon1494/stress-test/actions/workflows/paper.yml/badge.svg)
+
 **S**emantic-preserving **T**ransformations for **R**obust **E**valuation of **S**ynthetic-text **S**creening
 
 > Detector benchmarks count evasions. **We measure reliability.**
+> 📄 Paper draft: [`paper/main.tex`](paper/main.tex) · Results: [`results/`](results/)
+
+## Headline results (per-domain calibration, target 1% FPR)
+
+| Detector | Clean TPR | Robustness | Worst-case | FAR under human editing |
+|---|---|---|---|---|
+| Fast-DetectGPT | **97.7%** | 0.73 | 46.7% | 3.4% |
+| Binoculars-lite | 96.9% | 0.63 | 44.0% | 7.4% |
+| DeBERTa-v3 (ours) | 93.1% | 0.83 | **78.7%** | 8.0% |
+| TF-IDF + LR | 79.4% | **0.96** | 63.3% | 1.1% |
+
+Three findings: **(1)** clean accuracy and reliability rank detectors in nearly
+opposite orders; **(2)** at frozen deployed thresholds, grammar-correcting
+*human* text multiplies false accusations 5–8× — an effect that reproduces
+under *gold human editing* and lands hardest on non-native learners (up to
+15.3% FAR at CEFR-B), invisible to the AUROC-only evaluation used by prior
+benchmarks; **(3)** the bias tracks *text predictability*, not nativeness —
+on topic-controlled prompt essays, native writers are flagged most
+([figure](paper/figures/perplexity_by_corpus.png)).
 
 AI-text detectors advertise 99% accuracy — then fail the moment text is paraphrased,
 translated, or lightly edited, and falsely accuse non-native English writers. Existing

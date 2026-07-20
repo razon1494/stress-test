@@ -129,7 +129,12 @@ performance, or false-accusation drift at deployed thresholds.
 \paragraph{Attacks.} DIPPER \citep{krishna2023paraphrasing} showed paraphrase
 evades detectors (DetectGPT $70.3\%\!\to\!4.6\%$ at 1\% FPR---the operating
 point we adopt); \citet{sadasivan2023can} introduced recursive paraphrasing
-and a TV-distance impossibility bound. Both measure attack-side quality as
+and a TV-distance impossibility bound.\footnote{Their subtitle, ``Stress
+Testing AI Text Detectors Under Various Attacks,'' predates our framework
+name; the overlap is coincidental and the scopes differ---they stress-test
+with attacks on machine text, we evaluate reliability symmetrically across
+both classes. Our acronym expands to Semantic-preserving Transformations for
+Robust Evaluation of Synthetic-text Screening.} Both measure attack-side quality as
 aggregate tradeoffs; neither conditions per-example success on validated
 semantic preservation, and neither examines benign transformations of human
 text.
