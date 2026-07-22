@@ -82,8 +82,9 @@ def hardness_collapse_index(
 ) -> dict:
     """HCI = (A_easiest - A_hardest) / A_easiest over hardness quantile bins.
 
-    0 = performance uniform across difficulty; -> 1 = detector collapses on the
-    hard examples that aggregate metrics hide.
+    0 = performance uniform across difficulty; values approaching 1 indicate
+    collapse on hard examples. Negative values are possible when the measured
+    accuracy in the hardest bin exceeds accuracy in the easiest bin.
     """
     correct_arr = np.asarray(correct, dtype=float)
     h = np.asarray(hardness, dtype=float)

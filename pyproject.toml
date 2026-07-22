@@ -9,7 +9,7 @@ description = "STRESS-Test: Semantic-preserving Transformations for Robust Evalu
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "Arifur Rahman", email = "rahman.arif.cse@gmail.com" }]
+authors = [{ name = "Mohammad Arifur Rahman", email = "rahman.arif.cse@gmail.com" }]
 dependencies = [
     "numpy>=1.24",
     "scipy>=1.10",
@@ -19,6 +19,11 @@ dependencies = [
     "textstat>=0.7",
     "tqdm>=4.65",
 ]
+
+[project.urls]
+Homepage = "https://ari-fur.com/"
+Repository = "https://github.com/razon1494/stress-test"
+Issues = "https://github.com/razon1494/stress-test/issues"
 
 [project.optional-dependencies]
 # Model-backed transforms and detectors (Colab/Kaggle friendly, all open-weight)

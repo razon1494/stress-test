@@ -24,7 +24,7 @@ GROUPS = [
     ("wi_learner", "Learner essays (W&I)"),
     ("locness", "Native essays (LOCNESS)"),
     ("icnale_learner", "Learner prompt essays (ICNALE)"),
-    ("icnale_native", "NATIVE prompt essays (ICNALE)"),
+    ("icnale_native", "Native prompt essays (ICNALE)"),
 ]
 
 MACHINE_COLOR = "#4269D0"
@@ -66,7 +66,7 @@ def main() -> None:
     positions = np.arange(len(rows))
     for pos, (key, label, vals) in zip(positions, rows):
         color = MACHINE_COLOR if key == "hc3_machine" else HUMAN_COLOR
-        box = ax.boxplot(
+        ax.boxplot(
             [vals], positions=[pos], vert=False, widths=0.62, patch_artist=True,
             showfliers=False, whis=(5, 95),
             boxprops=dict(facecolor=color, edgecolor="none", alpha=0.85),
@@ -87,7 +87,7 @@ def main() -> None:
     ax.grid(axis="x", color="#E5E7EB", linewidth=0.7)
     ax.set_axisbelow(True)
     fig.suptitle(
-        "Predictable registers sit near the machine-text region — regardless of nativeness",
+        "Predictability varies by writing register",
         fontsize=10, x=0.985, ha="right", y=0.98,
     )
     fig.tight_layout(rect=(0, 0, 1, 0.94))

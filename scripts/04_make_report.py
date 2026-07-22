@@ -85,7 +85,15 @@ def main() -> None:
 
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    report = "# STRESS-Test Leaderboard\n\n" + leaderboard_table(cards) + "\n"
+    report = (
+        "# STRESS-Test Reliability Summary\n\n"
+        "> **Interpretation note.** These are preliminary results from the current "
+        "evaluation pool. Thresholds are estimated from clean human records in that "
+        "pool rather than an independent held-out calibration set. Automated semantic "
+        "similarity has not yet been validated with human annotations.\n\n"
+        + leaderboard_table(cards)
+        + "\n"
+    )
     report += "\n".join(make_reliability_card(d, r) for d, r in cards.items())
     if qaes_rows:
         report += (

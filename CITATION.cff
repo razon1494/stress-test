@@ -3,8 +3,8 @@ message: "If you use STRESS-Test, please cite it."
 title: "STRESS-Test: Semantic-preserving Transformations for Robust Evaluation of Synthetic-text Screening"
 authors:
   - family-names: Rahman
-    given-names: Arifur
+    given-names: Mohammad Arifur
     email: rahman.arif.cse@gmail.com
 year: 2026
 license: MIT
-repository-code: "https://github.com/<your-username>/stress-test"
+repository-code: "https://github.com/razon1494/stress-test"

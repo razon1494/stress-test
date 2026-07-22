@@ -1,4 +1,6 @@
-# Per-Domain Calibration Reanalysis
+# Per-Domain Calibration Sensitivity Analysis
+
+> **Interpretation note.** Thresholds are estimated and evaluated on records from the same dataset slices. This analysis measures sensitivity to the calibration strategy; it is not an independently held-out estimate.
 
 *One threshold per (detector, domain), calibrated at 1% FPR on that domain's clean human text; domains with <30 human docs fall back to the pooled threshold. Same cached scores as the pooled analysis.*
 

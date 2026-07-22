@@ -26,3 +26,18 @@ data/external/
 # fine-tuned model weights (regenerate via scripts/08_finetune_deberta.py)
 models/
 annotation/
+
+# Local reading copies of third-party papers; cite or link them instead of
+# redistributing copyrighted PDFs in this repository.
+docs/Related Papers/
+
+# Local LaTeX build products (GitHub Actions publishes the reviewed PDF artifact).
+paper/Stress_Test.pdf
+paper/main.pdf
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out

@@ -1,6 +1,8 @@
 # STRESS-Test Statistics
 
-*95% document-clustered bootstrap CIs; thresholds frozen at 1% FPR on clean human text.*
+> **Interpretation note.** Preliminary sensitivity analysis. Thresholds are estimated at 1% FPR from clean human records in the evaluation pool, not from an independent held-out calibration set.
+
+*95% document-clustered bootstrap confidence intervals.*
 
 ## Rates with confidence intervals
 

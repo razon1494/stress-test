@@ -3,6 +3,11 @@ on:
   push:
     branches: [main]
     paths: ["paper/**"]
+  pull_request:
+    paths: ["paper/**"]
+
+permissions:
+  contents: read
 
 jobs:
   build-pdf:
@@ -13,7 +18,29 @@ jobs:
         with:
           root_file: main.tex
           working_directory: paper
+
+      - name: Verify references and figure
+        shell: bash
+        run: |
+          test -s paper/main.pdf
+          test -s paper/main.bbl
+          grep -Fq '\bibitem' paper/main.bbl
+          grep -Fq 'figures/perplexity_by_corpus.pdf' paper/main.log
+          if grep -Eq 'Citation .* undefined|Reference .* undefined|There were undefined (citations|references)' paper/main.log; then
+            grep -E 'Citation .* undefined|Reference .* undefined|There were undefined (citations|references)' paper/main.log
+            exit 1
+          fi
+          if grep -Fq 'Overfull \hbox' paper/main.log; then
+            grep -F 'Overfull \hbox' paper/main.log
+            exit 1
+          fi
+
       - uses: actions/upload-artifact@v4
         with:
           name: stress-test-paper
-          path: paper/main.pdf
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            paper/main.pdf
+            paper/main.bbl
+            paper/main.log
