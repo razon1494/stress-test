@@ -200,20 +200,26 @@ document. The fairness corpora are held out from detector fitting, but they
 participate in the current clean calibration sensitivity analysis.
 
 \subsection{Metrics}
-With $A(d,t)$ the TPR at $\tau_d$ under condition $t$ ($t{=}0$ clean):
-\emph{Robustness Score} $\mathrm{RS} = \frac{1}{|T|}\sum_t A(d,t)/A(d,0)$;
-\emph{Transformation Stability} $\mathrm{TS} = 1 - \mathrm{CV}_t[A(d,t)]$;
-\emph{Worst-Case Performance} $\mathrm{WCP} = \min_{t \in \text{pipelines}} A(d,t)$
-restricted to quality-valid conditions;
-\emph{False-Accusation Rate} $\mathrm{FAR}(d,t) = \Pr[s_d(t(x)) > \tau_d \mid y(x)=\text{human}]$;
-\emph{Quality-Adjusted Evasion} $\qaes = \Pr[\text{evade} \mid \mathrm{sim}(x, t(x)) \geq 0.85]$
-with embedding similarity \citep{reimers2019sentencebert} (threshold pending
-human validation, \S\ref{sec:limitations});
-\emph{Hardness Collapse Index} $\mathrm{HCI} = (A_{Q1} - A_{Q5})/A_{Q1}$ over
-quintiles of a 5-signal hardness score fit with a leave-one-out detector
-committee (\S\ref{sec:hardness}). All intervals are 95\% bootstrap CIs with
-resampling clustered by source document; detector comparisons use paired
-sign-flip permutation tests with Holm correction.
+Let $A(d,t)$ denote detector $d$'s TPR at threshold $\tau_d$ under condition
+$t$, with $t{=}0$ denoting clean text. We report Robustness Score (RS),
+Transformation Stability (TS), Worst-Case Performance (WCP), False-Accusation
+Rate (FAR), Quality-Adjusted Evasion (\qaes), and Hardness Collapse Index (HCI):
+\begin{align*}
+\mathrm{RS}(d)   &= \frac{1}{|T|}\sum_{t \in T}\frac{A(d,t)}{A(d,0)}, \\
+\mathrm{TS}(d)   &= 1-\mathrm{CV}_{t \in T}[A(d,t)], \\
+\mathrm{WCP}(d)  &= \min_{t \in \text{pipelines}} A(d,t), \\
+\mathrm{FAR}(d,t)&= \Pr\!\left[s_d(t(x))>\tau_d \mid y(x)=\mathrm{human}\right], \\
+\qaes(d,t)       &= \Pr\!\left[\mathrm{evade} \mid
+  \mathrm{sim}(x,t(x))\geq0.85\right], \\
+\mathrm{HCI}(d)  &= \frac{A_{Q_1}-A_{Q_5}}{A_{Q_1}}.
+\end{align*}
+WCP is restricted to quality-valid named pipelines. QAES uses embedding
+similarity \citep{reimers2019sentencebert}; its cutoff remains pending human
+validation (\S\ref{sec:limitations}). HCI uses quintiles of a five-signal
+hardness score fit with a leave-one-out detector committee
+(\S\ref{sec:hardness}). All intervals are 95\% document-clustered bootstrap
+CIs; detector comparisons use paired sign-flip permutation tests with Holm
+correction.
 
 \section{Experimental Setup}
 \label{sec:setup}
