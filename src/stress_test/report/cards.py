@@ -1,7 +1,4 @@
-"""Reliability cards: the per-detector 'nutrition label' that replaces a single
-leaderboard number. Rank primarily by WCP and FAR so a brittle detector with
-high clean accuracy cannot win.
-"""
+"""Reliability cards that summarize multiple detector behavior metrics."""
 
 from __future__ import annotations
 
@@ -23,15 +20,15 @@ def make_reliability_card(detector: str, results: dict) -> str:
 
 | Axis | Value | Meaning |
 |---|---|---|
-| Clean TPR @ 1% FPR | {fmt('clean_tpr', pct=True)} | headline number everyone else reports |
+| Clean TPR @ 1% FPR | {fmt('clean_tpr', pct=True)} | sensitivity on the clean evaluation records |
 | Robustness Score (RS) | {fmt('rs')} | mean retained performance across transforms |
 | Transformation Stability (TS) | {fmt('ts')} | 1 = uniform across transforms, low = fragile |
-| Worst-Case Perf (WCP) | {fmt('wcp', pct=True)} | on `{results.get('worst_pipeline', 'n/a')}` — what deployers should assume |
+| Worst-Case Perf (WCP) | {fmt('wcp', pct=True)} | minimum observed TPR, on `{results.get('worst_pipeline', 'n/a')}` |
 | False-Accusation Rate, clean | {fmt('far_clean', pct=True)} | FPR on clean human text |
-| False-Accusation Rate, worst | {fmt('far_worst', pct=True)} | on `{results.get('far_worst_transform', 'n/a')}` — the social-cost number |
-| Hardness Collapse (HCI) | {fmt('hci')} | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| False-Accusation Rate, worst | {fmt('far_worst', pct=True)} | maximum observed human-text FPR, on `{results.get('far_worst_transform', 'n/a')}` |
+| Hardness Collapse (HCI) | {fmt('hci')} | larger = stronger collapse; negative = higher hard-bin accuracy |
 | ECE clean → shifted | {fmt('ece_clean')} → {fmt('ece_shift')} | is confidence still meaningful under shift? |
-| Quality-Adjusted Evasion | {fmt('qaes_mean', pct=True)} | evasion by transforms that PRESERVE meaning |
+| Quality-Adjusted Evasion | {fmt('qaes_mean', pct=True)} | evasion among transforms passing the automated similarity filter |
 """
 
 
@@ -41,7 +38,7 @@ def leaderboard_table(cards: dict[str, dict]) -> str:
         "|---|---|---|---|---|---|\n"
     )
     rows = []
-    # sort by worst-case performance: the deployment-relevant ranking
+    # Sort by observed worst-case performance for a consistent presentation.
     for name, r in sorted(cards.items(), key=lambda kv: -(kv[1].get("wcp") or 0)):
         rows.append(
             f"| {name} | {r.get('clean_tpr', float('nan')):.1%} | "

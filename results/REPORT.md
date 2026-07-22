@@ -1,4 +1,6 @@
-# STRESS-Test Leaderboard
+# STRESS-Test Reliability Summary
+
+> **Interpretation note.** These are preliminary results from the current evaluation pool. Thresholds are estimated from clean human records in that pool rather than an independent held-out calibration set. Automated semantic similarity has not yet been validated with human annotations.
 
 | Detector | Clean TPR | RS | WCP | FAR (worst) | HCI |
 |---|---|---|---|---|---|
@@ -16,15 +18,15 @@
 
 | Axis | Value | Meaning |
 |---|---|---|
-| Clean TPR @ 1% FPR | 57.3% | headline number everyone else reports |
+| Clean TPR @ 1% FPR | 57.3% | sensitivity on the clean evaluation records |
 | Robustness Score (RS) | 0.911 | mean retained performance across transforms |
 | Transformation Stability (TS) | 0.822 | 1 = uniform across transforms, low = fragile |
-| Worst-Case Perf (WCP) | 34.7% | on `launder_lite` — what deployers should assume |
+| Worst-Case Perf (WCP) | 34.7% | minimum observed TPR, on `launder_lite` |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
-| False-Accusation Rate, worst | 2.7% | on `launder_lite` — the social-cost number |
-| Hardness Collapse (HCI) | -0.017 | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| False-Accusation Rate, worst | 2.7% | maximum observed human-text FPR, on `launder_lite` |
+| Hardness Collapse (HCI) | -0.017 | larger = stronger collapse; negative = higher hard-bin accuracy |
 | ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
-| Quality-Adjusted Evasion | 53.3% | evasion by transforms that PRESERVE meaning |
+| Quality-Adjusted Evasion | 53.3% | evasion among transforms passing the automated similarity filter |
 
 ## Reliability Card — stylometric_gbm
 
@@ -32,15 +34,15 @@
 
 | Axis | Value | Meaning |
 |---|---|---|
-| Clean TPR @ 1% FPR | 24.4% | headline number everyone else reports |
+| Clean TPR @ 1% FPR | 24.4% | sensitivity on the clean evaluation records |
 | Robustness Score (RS) | 0.754 | mean retained performance across transforms |
 | Transformation Stability (TS) | 0.691 | 1 = uniform across transforms, low = fragile |
-| Worst-Case Perf (WCP) | 16.0% | on `launder_lite` — what deployers should assume |
+| Worst-Case Perf (WCP) | 16.0% | minimum observed TPR, on `launder_lite` |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
-| False-Accusation Rate, worst | 1.1% | on `human_edit` — the social-cost number |
-| Hardness Collapse (HCI) | 0.000 | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| False-Accusation Rate, worst | 1.1% | maximum observed human-text FPR, on `human_edit` |
+| Hardness Collapse (HCI) | 0.000 | larger = stronger collapse; negative = higher hard-bin accuracy |
 | ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
-| Quality-Adjusted Evasion | 81.7% | evasion by transforms that PRESERVE meaning |
+| Quality-Adjusted Evasion | 81.7% | evasion among transforms passing the automated similarity filter |
 
 ## Reliability Card — perplexity
 
@@ -48,15 +50,15 @@
 
 | Axis | Value | Meaning |
 |---|---|---|
-| Clean TPR @ 1% FPR | 88.2% | headline number everyone else reports |
+| Clean TPR @ 1% FPR | 88.2% | sensitivity on the clean evaluation records |
 | Robustness Score (RS) | 0.493 | mean retained performance across transforms |
 | Transformation Stability (TS) | 0.196 | 1 = uniform across transforms, low = fragile |
-| Worst-Case Perf (WCP) | 30.0% | on `launder_lite` — what deployers should assume |
+| Worst-Case Perf (WCP) | 30.0% | minimum observed TPR, on `launder_lite` |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
-| False-Accusation Rate, worst | 3.0% | on `human_edit` — the social-cost number |
-| Hardness Collapse (HCI) | 0.000 | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| False-Accusation Rate, worst | 3.0% | maximum observed human-text FPR, on `human_edit` |
+| Hardness Collapse (HCI) | 0.000 | larger = stronger collapse; negative = higher hard-bin accuracy |
 | ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
-| Quality-Adjusted Evasion | 36.3% | evasion by transforms that PRESERVE meaning |
+| Quality-Adjusted Evasion | 36.3% | evasion among transforms passing the automated similarity filter |
 
 ## Reliability Card — fast_detect_gpt
 
@@ -64,15 +66,15 @@
 
 | Axis | Value | Meaning |
 |---|---|---|
-| Clean TPR @ 1% FPR | 95.0% | headline number everyone else reports |
+| Clean TPR @ 1% FPR | 95.0% | sensitivity on the clean evaluation records |
 | Robustness Score (RS) | 0.621 | mean retained performance across transforms |
 | Transformation Stability (TS) | 0.546 | 1 = uniform across transforms, low = fragile |
-| Worst-Case Perf (WCP) | 29.3% | on `launder_lite` — what deployers should assume |
+| Worst-Case Perf (WCP) | 29.3% | minimum observed TPR, on `launder_lite` |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
-| False-Accusation Rate, worst | 5.0% | on `paraphrase_t5` — the social-cost number |
-| Hardness Collapse (HCI) | 0.008 | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| False-Accusation Rate, worst | 5.0% | maximum observed human-text FPR, on `paraphrase_t5` |
+| Hardness Collapse (HCI) | 0.008 | larger = stronger collapse; negative = higher hard-bin accuracy |
 | ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
-| Quality-Adjusted Evasion | 32.0% | evasion by transforms that PRESERVE meaning |
+| Quality-Adjusted Evasion | 32.0% | evasion among transforms passing the automated similarity filter |
 
 ## Reliability Card — binoculars_lite
 
@@ -80,15 +82,15 @@
 
 | Axis | Value | Meaning |
 |---|---|---|
-| Clean TPR @ 1% FPR | 99.6% | headline number everyone else reports |
+| Clean TPR @ 1% FPR | 99.6% | sensitivity on the clean evaluation records |
 | Robustness Score (RS) | 0.667 | mean retained performance across transforms |
 | Transformation Stability (TS) | 0.553 | 1 = uniform across transforms, low = fragile |
-| Worst-Case Perf (WCP) | 49.3% | on `launder_lite` — what deployers should assume |
+| Worst-Case Perf (WCP) | 49.3% | minimum observed TPR, on `launder_lite` |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
-| False-Accusation Rate, worst | 7.8% | on `paraphrase_t5` — the social-cost number |
-| Hardness Collapse (HCI) | 0.149 | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| False-Accusation Rate, worst | 7.8% | maximum observed human-text FPR, on `paraphrase_t5` |
+| Hardness Collapse (HCI) | 0.149 | larger = stronger collapse; negative = higher hard-bin accuracy |
 | ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
-| Quality-Adjusted Evasion | 19.2% | evasion by transforms that PRESERVE meaning |
+| Quality-Adjusted Evasion | 19.2% | evasion among transforms passing the automated similarity filter |
 
 ## Reliability Card — roberta_openai
 
@@ -96,15 +98,15 @@
 
 | Axis | Value | Meaning |
 |---|---|---|
-| Clean TPR @ 1% FPR | 51.9% | headline number everyone else reports |
+| Clean TPR @ 1% FPR | 51.9% | sensitivity on the clean evaluation records |
 | Robustness Score (RS) | 0.455 | mean retained performance across transforms |
 | Transformation Stability (TS) | 0.180 | 1 = uniform across transforms, low = fragile |
-| Worst-Case Perf (WCP) | 20.0% | on `launder_lite` — what deployers should assume |
+| Worst-Case Perf (WCP) | 20.0% | minimum observed TPR, on `launder_lite` |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
-| False-Accusation Rate, worst | 8.1% | on `paraphrase_t5` — the social-cost number |
-| Hardness Collapse (HCI) | -0.039 | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| False-Accusation Rate, worst | 8.1% | maximum observed human-text FPR, on `paraphrase_t5` |
+| Hardness Collapse (HCI) | -0.039 | larger = stronger collapse; negative = higher hard-bin accuracy |
 | ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
-| Quality-Adjusted Evasion | 65.2% | evasion by transforms that PRESERVE meaning |
+| Quality-Adjusted Evasion | 65.2% | evasion among transforms passing the automated similarity filter |
 
 ## Reliability Card — deberta_hc3_ft
 
@@ -112,15 +114,15 @@
 
 | Axis | Value | Meaning |
 |---|---|---|
-| Clean TPR @ 1% FPR | 72.1% | headline number everyone else reports |
+| Clean TPR @ 1% FPR | 72.1% | sensitivity on the clean evaluation records |
 | Robustness Score (RS) | 0.667 | mean retained performance across transforms |
 | Transformation Stability (TS) | 0.346 | 1 = uniform across transforms, low = fragile |
-| Worst-Case Perf (WCP) | 56.7% | on `launder_lite` — what deployers should assume |
+| Worst-Case Perf (WCP) | 56.7% | minimum observed TPR, on `launder_lite` |
 | False-Accusation Rate, clean | 1.0% | FPR on clean human text |
-| False-Accusation Rate, worst | 5.7% | on `human_edit` — the social-cost number |
-| Hardness Collapse (HCI) | -0.017 | 0 = uniform over difficulty, 1 = collapses on hard cases |
+| False-Accusation Rate, worst | 5.7% | maximum observed human-text FPR, on `human_edit` |
+| Hardness Collapse (HCI) | -0.017 | larger = stronger collapse; negative = higher hard-bin accuracy |
 | ECE clean → shifted | n/a → n/a | is confidence still meaningful under shift? |
-| Quality-Adjusted Evasion | 29.8% | evasion by transforms that PRESERVE meaning |
+| Quality-Adjusted Evasion | 29.8% | evasion among transforms passing the automated similarity filter |
 
 ## Quality-Adjusted Evasion (machine class, semsim >= 0.85)
 

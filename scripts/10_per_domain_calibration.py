@@ -37,7 +37,10 @@ def main() -> None:
     doc_domain = {r.doc_id: r.domain for r in records}
 
     conditions = sorted({p.stem.split("__", 1)[1] for p in cache.glob("*__*.csv")})
-    lines = ["# Per-Domain Calibration Reanalysis", "",
+    lines = ["# Per-Domain Calibration Sensitivity Analysis", "",
+             "> **Interpretation note.** Thresholds are estimated and evaluated on records "
+             "from the same dataset slices. This analysis measures sensitivity to the "
+             "calibration strategy; it is not an independently held-out estimate.", "",
              f"*One threshold per (detector, domain), calibrated at {args.target_fpr:.0%} FPR "
              f"on that domain's clean human text; domains with <{args.min_human_docs} human "
              "docs fall back to the pooled threshold. Same cached scores as the pooled analysis.*",

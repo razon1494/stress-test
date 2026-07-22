@@ -14,7 +14,6 @@ import itertools
 import json
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 from stress_test.stats import (
@@ -46,7 +45,10 @@ def main() -> None:
     )
 
     lines = ["# STRESS-Test Statistics", "",
-             "*95% document-clustered bootstrap CIs; thresholds frozen at 1% FPR on clean human text.*",
+             "> **Interpretation note.** Preliminary sensitivity analysis. Thresholds are "
+             "estimated at 1% FPR from clean human records in the evaluation pool, not from "
+             "an independent held-out calibration set.", "",
+             "*95% document-clustered bootstrap confidence intervals.*",
              "", "## Rates with confidence intervals", "",
              "| Detector | Condition | TPR [95% CI] | FPR [95% CI] |", "|---|---|---|---|"]
     payload: dict = {"rates": {}, "paired_tests": {}}

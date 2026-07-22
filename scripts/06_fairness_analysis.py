@@ -71,6 +71,10 @@ def main() -> None:
         )
 
     lines = ["# Fairness Analysis: Native vs Non-Native False-Accusation Rate", "",
+              "> **Interpretation note.** Exploratory subgroup analysis. Thresholds are "
+              "estimated from clean human records in the evaluation pool, and subgroup "
+              "sample sizes vary. These results do not establish causal effects of "
+              "language background.", "",
               f"*Liang et al. (Patterns 2023) found 61.22% FPR on clean non-native TOEFL essays "
               f"with commercial detectors. n_native={sum(doc_native.values())}, "
               f"n_non_native={sum(not v for v in doc_native.values())}.*", "",

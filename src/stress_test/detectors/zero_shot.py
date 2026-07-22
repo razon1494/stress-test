@@ -102,7 +102,6 @@ class BinocularsLite(Detector):
 
     def score(self, texts: list[str]) -> np.ndarray:
         import torch
-        import torch.nn.functional as F
 
         out = []
         for text in texts:

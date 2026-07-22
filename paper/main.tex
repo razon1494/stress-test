@@ -1,17 +1,26 @@
-% STRESS-Test — arXiv draft v0.1
+% STRESS-Test — working draft v0.3 (not a released preprint)
 % Build: pdflatex main && bibtex main && pdflatex main && pdflatex main
 % (or upload the paper/ folder to Overleaf)
-% All other numbers are from results/ at repo commit 801a32f.
+% Reported numbers are synchronized with the generated artifacts in results/.
 
 \documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{placeins}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage[colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue]{hyperref}
 \usepackage{xcolor}
-\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\hypersetup{
+  pdftitle={STRESS-Test: Measuring the Reliability of AI-Text Detectors Under Real-World Transformations},
+  pdfauthor={Mohammad Arifur Rahman},
+  pdfsubject={Robust evaluation of AI-text detectors},
+  pdfkeywords={AI-text detection, robustness, false-positive rate, trustworthy NLP}
+}
 \newcommand{\qaes}{\textsc{qaes}}
 \newcommand{\stresstest}{STRESS-Test}
 
@@ -27,6 +36,13 @@ Under Real-World Transformations}
 \begin{document}
 \maketitle
 
+\begin{quote}
+\small\textbf{Draft status.} This is an active, pre-submission manuscript.
+Reported results are preliminary: semantic-preservation thresholds have not yet
+received the planned human validation, and the current calibration sensitivity
+analyses do not use a fully independent calibration set.
+\end{quote}
+
 \begin{abstract}
 Detectors of AI-generated text are deployed in classrooms, newsrooms, and hiring
 pipelines on the strength of a single number: accuracy on clean text. We argue
@@ -35,25 +51,26 @@ framework that measures detector \emph{reliability}: behaviour under realistic
 transformations, at deployment operating points, symmetrically for both classes.
 We formalize transformations as label-preserving metamorphic relations, freeze
 each detector's threshold once at 1\% FPR on clean human text, and evaluate
-seven detector families across fifteen conditions, including composed
+seven detector families across fourteen conditions (clean plus thirteen
+transformations), including composed
 ``laundering'' pipelines, and---critically---transformations applied to
-\emph{human} text, including 3{,}200+ essays by non-native English writers
-across ten countries and four proficiency bands. Our findings: (1) headline
+\emph{human} text, including more than 2{,}200 essays by non-native English
+writers across ten learner regions and four proficiency bands. Our preliminary
+findings: (1) headline
 accuracy and reliability rank detectors in nearly opposite orders---the
 strongest clean-text detectors (97--98\% TPR) lose half or more of their
-detection rate under a depth-2 paraphrase--translate pipeline, while trivial
-character perturbations drive perplexity-family detectors from $\geq$93\% to
-$\leq$1\% TPR; (2) evaluating attacked human text with threshold-free metrics,
+detection rate under a depth-2 paraphrase--translate pipeline, while a simple
+case perturbation drives the GPT-2 perplexity detector from 93.1\% to 0.4\%
+TPR; (2) evaluating attacked human text with threshold-free metrics,
 as prior benchmarks do, hides a false-accusation problem: at frozen deployed
-thresholds, grammar correction raises the false-positive rate on non-native
-learner essays to as much as 15.3\% (RoBERTa, CEFR-B writers) while native
-essayists in the same corpus remain at 0\%---an effect that reproduces under
-\emph{gold human corrections}, not just model-generated editing; and
-(3) the bias is not intrinsically about non-nativeness: on topic-controlled
-prompt essays, \emph{native} writers are flagged most, supporting a unifying
-account in which detectors penalize statistically predictable text, and who
-gets hurt depends on the writing task. \stresstest{} is fully reproducible on
-a single consumer laptop with open-weight models and freely available corpora.
+thresholds, false-positive rates change unevenly across writing registers and
+writer groups, reaching double digits for both learner and native comparison
+groups; related shifts also appear under gold or professional human editing,
+not only model-generated editing; and (3) native status alone does not explain
+the pattern: on topic-controlled prompt essays, \emph{native} writers are
+flagged most. This is consistent with, but does not by itself establish, a
+register/predictability account. We release the implementation, data recipes,
+generated summaries, and an explicit validation roadmap.
 \end{abstract}
 
 \section{Introduction}
@@ -61,22 +78,23 @@ a single consumer laptop with open-weight models and freely available corpora.
 % Para 1: stakes — detectors are load-bearing infrastructure
 Text-provenance detectors now gate consequential decisions: academic-integrity
 referrals, content moderation, hiring screens. Commercial and open-source
-detectors advertise accuracies above 99\%, and every major benchmark
-evaluates them primarily on clean, unmodified machine text
+detectors often advertise accuracies above 99\%, and benchmark summaries
+commonly emphasize performance on clean machine text
 \citep{dugan2024raid,li2024mage,wang2024m4gt}.
 
 % Para 2: the gap — what existing evaluations measure vs what deployment needs
 Deployment looks different. Text reaching a detector has typically passed
 through tools---paraphrasers, translators, grammar checkers---or through a
-human editor; and half of the texts a deployed detector judges are
-\emph{human-written}, where an error is a false accusation with real social
+human editor. Human-written inputs are equally consequential: an error is a
+false accusation with real social
 cost \citep{liang2023gpt}. Existing benchmarks address fragments of this
 picture: RAID \citep{dugan2024raid} applies eleven adversarial attacks, but
 one at a time and only to machine text; DetectRL \citep{wu2024detectrl}
 perturbs human text but evaluates with threshold-free AUROC, concluding that
 attacks on human text are ``minimal'' in impact or even helpful. We show this
-conclusion is an artifact of the metric: AUROC cannot see false-accusation
-drift at a deployed operating point.
+conclusion can depend on the metric: AUROC cannot localize false-accusation
+drift at a selected operating point, and our preliminary fixed-threshold
+analysis reveals movement hidden by the ranking summary.
 
 % Para 3: what we do
 \stresstest{} evaluates \emph{reliability}, defined by four commitments:
@@ -94,24 +112,26 @@ text preserves meaning (quality-adjusted evasion, \qaes).
 % Para 4: contributions list
 \noindent Our contributions:
 \begin{enumerate}
-  \item A reliability evaluation framework and open benchmark covering seven
-        detector families, fifteen transformation conditions including
+  \item A reliability evaluation framework covering seven detector families
+        and fourteen evaluation conditions, including
         composed pipelines and \emph{gold human editing}, with
         document-clustered bootstrap inference throughout (\S\ref{sec:framework}).
   \item A re-examination of the ``attacks on human text are harmless'' claim
         \citep{wu2024detectrl}: at frozen thresholds, benign transformations
-        of human text multiply false-accusation rates several-fold, with the
-        burden concentrated on specific writer populations (\S\ref{sec:fairness}).
-  \item Evidence that fairness harms are \emph{register-mediated}: non-native
-        TOEFL-style writers and native writers of formulaic prompt essays are
-        both flagged at elevated rates, unified by a perplexity-mediation
-        account (\S\ref{sec:register}).
+        can move false-accusation rates several-fold, with heterogeneous
+        patterns across writing groups (\S\ref{sec:fairness}).
+  \item Evidence that false-accusation patterns vary with writing register:
+        non-native TOEFL-style writers and native writers of formulaic prompt
+        essays can both be flagged at elevated rates. We evaluate a
+        predictability-based account without treating it as causal
+        (\S\ref{sec:register}).
   \item A hardness-aware analysis showing that example difficulty is
         detector-mechanism-relative: a difficulty score predictive for
         likelihood-based detectors anti-predicts for surface-feature
         classifiers (\S\ref{sec:hardness}).
-  \item Full reproducibility on a \$0 budget: open-weight models only,
-        consumer-GPU scale, public corpora, seeds and caches shipped.
+  \item An auditable, consumer-GPU-scale implementation using open-weight
+        models, deterministic document splits, data recipes, generated summary
+        artifacts, and CI-tested research logic.
 \end{enumerate}
 
 \section{Related Work}
@@ -122,9 +142,10 @@ benchmark (6.2M generations; 11 attacks applied singly to machine text;
 per-domain thresholds at fixed 5\% FPR). DetectRL \citep{wu2024detectrl}
 attacks human text (89.6k attacked human samples) but reports only AUROC/F1.
 MAGE \citep{li2024mage} and M4GT-Bench \citep{wang2024m4gt} cover
-generator/domain/language shift without a transformation axis. None measure
-composed transformations, quality-conditioned evasion, hardness-stratified
-performance, or false-accusation drift at deployed thresholds.
+generator/domain/language shift without a transformation axis. To our
+knowledge, no single benchmark jointly evaluates composed transformations,
+quality-conditioned evasion, hardness-stratified performance, and
+false-accusation drift at deployed thresholds.
 
 \paragraph{Attacks.} DIPPER \citep{krishna2023paraphrasing} showed paraphrase
 evades detectors (DetectGPT $70.3\%\!\to\!4.6\%$ at 1\% FPR---the operating
@@ -135,8 +156,8 @@ name; the overlap is coincidental and the scopes differ---they stress-test
 with attacks on machine text, we evaluate reliability symmetrically across
 both classes. Our acronym expands to Semantic-preserving Transformations for
 Robust Evaluation of Synthetic-text Screening.} Both measure attack-side quality as
-aggregate tradeoffs; neither conditions per-example success on validated
-semantic preservation, and neither examines benign transformations of human
+aggregate tradeoffs; neither conditions per-example success on
+embedding-filtered semantic preservation, and neither examines benign transformations of human
 text.
 
 \paragraph{Fairness.} \citet{liang2023gpt} found commercial detectors flag
@@ -153,7 +174,8 @@ unmeasured.
 A transformation $t$ is admissible iff it preserves the gold provenance label:
 $y(t(x)) = y(x)$. This is the invariant that licenses (a) composition---chains
 $t_k \circ \cdots \circ t_1$ remain admissible---and (b) symmetric evaluation
-on human text. We implement 15 conditions in 6 families: character/token
+on human text. We evaluate 14 conditions (clean plus 13 transformed conditions)
+in 6 families: character/token
 perturbations (homoglyph, zero-width, casing, typos, whitespace, contraction
 expansion), paraphrase (T5), round-trip translation (EN$\to$FR$\to$EN),
 model-based grammar correction \citep{raheja2023coedit}, \emph{gold human
@@ -165,12 +187,16 @@ correction).
 
 \subsection{Threshold-transfer protocol}
 For detector $d$ with score function $s_d$ (higher = more machine-like), the
-threshold $\tau_d$ is the $(1-\alpha)$-quantile of $s_d$ on \emph{clean test
-human text} with $\alpha = 0.01$, then frozen: every condition, both classes,
-is evaluated at $\tau_d$. This matches deployment (thresholds are set once, on
-clean data) and, unlike AUROC, exposes calibration failures. Trainable
-detectors train on clean data only, split by source document; the fairness
-corpora are held out entirely (out-of-domain test slices).
+threshold $\tau_d$ is the $(1-\alpha)$-quantile of a clean human calibration
+pool with $\alpha = 0.01$, then frozen: every transformed condition, both
+classes, is evaluated at $\tau_d$. In the current result set, however, the
+calibration pool is drawn from the clean human portion of the evaluation data
+(either pooled or per-domain), rather than an independent calibration split.
+We therefore treat these operating-point results as sensitivity analyses; the
+final protocol will reserve calibration documents before any test analysis.
+Trainable detectors use clean training records only and are split by source
+document. The fairness corpora are held out from detector fitting, but they
+participate in the current clean calibration sensitivity analysis.
 
 \subsection{Metrics}
 With $A(d,t)$ the TPR at $\tau_d$ under condition $t$ ($t{=}0$ clean):
@@ -207,8 +233,8 @@ stylometric features + GBM (GPTZero-style); GPT-2 perplexity; Fast-DetectGPT
 (\emph{lite}: GPT-2/DistilGPT-2 observer--performer pair; deviation from the
 original Falcon-7B pair is a stated limitation); the OpenAI RoBERTa GPT-2
 detector \citep{solaiman2019release}; and our own DeBERTa-v3-base
-\citep{he2023debertav3} fine-tuned on the HC3 train split (99.25\% val
-accuracy; 3 epochs, bf16, single RTX 4050).
+\citep{he2023debertav3} fine-tuned on the HC3 train split (3 epochs, bf16,
+single seed, single RTX 4050).
 
 \section{Results}
 \label{sec:results}
@@ -246,37 +272,36 @@ Stylometric GBM       & 55.7\% & 0.92 & 50.7\% & 0.8\% & 1.2\% \\
 clean FPR 0.7--0.8\% for every detector). WCP = minimum TPR over named
 realistic pipelines (worst is \texttt{launder\_lite} for all). FAR columns:
 false-positive rate on grammar-corrected and gold-human-edited human text at
-the frozen thresholds---5--8$\times$ the calibrated rate for the
-likelihood-based and neural detectors.}
+the frozen thresholds. These thresholds are estimated from the same clean
+domain slices, so the table is a calibration sensitivity analysis rather than
+an independent test estimate.}
 \label{tab:leaderboard}
 \end{table}
 
 \paragraph{Mechanism asymmetry.} Character-level noise that any normalizer
 would remove is catastrophic for likelihood-based detectors: swapping the case
-of $\sim$2\% of characters drives GPT-2 perplexity from 93\% to \textbf{0.0\%}
-TPR, zero-width spaces to $<$1\%, homoglyphs to $\sim$2\% (all $p < 0.001$
-after Holm correction vs.\ TF-IDF, which is essentially unaffected). The same noise
-zeroes out both subword-token classifiers (RoBERTa, DeBERTa). Conversely,
-semantic transforms (paraphrase, translation) degrade TF-IDF and spare the
-DeBERTa fine-tune (87\% TPR under paraphrase---though in-domain training
-caution applies, \S\ref{sec:limitations}). \emph{No detector family is robust
-to both perturbation classes.} A normalization-preprocessing ablation restores
-the perturbation-vulnerable detectors, quantifying how much reported
-``adversarial robustness'' failure is trivially fixable.
+of $\sim$2\% of characters drives GPT-2 perplexity from 93.1\% to 0.4\% TPR;
+zero-width spaces reduce it to 5.0\%, and homoglyph substitution to 17.2\%.
+TF-IDF is essentially unchanged by those perturbations. RoBERTa falls to
+0--0.8\% on the same three conditions, whereas DeBERTa is more robust to case
+and homoglyph changes but falls to 1.1\% under zero-width insertion. Conversely,
+semantic transforms leave the DeBERTa fine-tune near its clean rate (92.4\%
+under paraphrase), though in-domain training caution applies
+(\S\ref{sec:limitations}). \emph{The vulnerabilities are strongly
+mechanism-dependent.} The repository includes normalization utilities, but a
+full detector-level normalization ablation has not yet been reported.
 
-\subsection{Threshold-free metrics hide false accusations}
+\subsection{Threshold-free metrics can hide false-accusation movement}
 \label{sec:fairness}
 
 DetectRL \citep{wu2024detectrl} reports that perturbing human text
 \emph{helps} detection (+10.2 AUROC on average) and concludes such attacks are
-benign. At frozen thresholds the picture reverses. Grammar-correcting human
-text---the signature action of an innocent student using a writing
-tool---raises FAR on non-native learner text from $\leq$1\% to 2.9--15.3\%
-depending on detector, while native essayists in the same corpus remain at
-0\%. (Fairness tables use the single pooled deployed threshold per detector,
-matching the deployment scenario in which one tool serves every writer; the
-per-domain regime of Table~\ref{tab:leaderboard} shows the same 5--8$\times$
-aggregate FAR inflation.)
+benign. At a frozen threshold, however, ranking metrics can hide movement in
+false-accusation rates. Table~\ref{tab:cefr} shows that grammar correction and
+gold human editing change FAR unevenly across detectors and writing groups.
+The current fairness table uses one pooled threshold per detector; because that
+threshold is estimated from the clean evaluation pool, the values are
+exploratory rather than independent test estimates.
 
 \begin{table}[t]
 \centering
@@ -285,62 +310,64 @@ aggregate FAR inflation.)
 \toprule
 Detector & Condition & CEFR A & CEFR B & CEFR C & Native \\
 \midrule
-Perplexity & clean            & 0.0\% & 0.0\% & 0.7\% & 0.0\% \\
-Perplexity & grammar-corr.    & 4.7\% & 6.7\% & 7.4\% & 0.0\% \\
-Perplexity & \emph{human edit}& 1.6\% & 2.7\% & 4.7\% & 2.0\% \\
-RoBERTa    & clean            & 0.0\% & 0.7\% & 0.7\% & 0.0\% \\
-RoBERTa    & grammar-corr.    & 10.2\% & \textbf{15.3\%} & 6.7\% & 0.0\% \\
-RoBERTa    & \emph{human edit}& 7.8\% & 6.0\% & 6.7\% & 2.0\% \\
-DeBERTa (ours) & grammar-corr.& 0.0\% & 3.3\% & 8.1\% & 0.0\% \\
+Perplexity & clean             & 0.0\% & 1.0\% & 0.7\% & 7.3\% \\
+Perplexity & grammar-corr.     & 1.0\% & 3.8\% & 1.3\% & 11.3\% \\
+Perplexity & \emph{human edit} & 1.6\% & 0.7\% & 0.0\% & 0.0\% \\
+RoBERTa    & clean             & 0.7\% & 0.8\% & 0.0\% & 6.0\% \\
+RoBERTa    & grammar-corr.     & 6.8\% & 4.7\% & 3.4\% & \textbf{12.7\%} \\
+RoBERTa    & \emph{human edit} & 1.6\% & 1.3\% & 2.7\% & 2.0\% \\
+DeBERTa (ours) & grammar-corr. & 0.7\% & 4.1\% & 2.7\% & 8.0\% \\
+Binoculars-lite & \emph{human edit} & 7.8\% & 6.7\% & \textbf{8.1\%} & 2.0\% \\
 \bottomrule
 \end{tabular}
-\caption{False-accusation rate by CEFR proficiency band (W\&I+LOCNESS;
-$n$ = 128/150/149/50 per band). ``Human edit'' applies each essay's
-\emph{gold annotator corrections}---no model involved.}
+\caption{False-accusation rate by CEFR proficiency band (W\&I+LOCNESS).
+Clean/grammar-corrected rows contain $n=295/983/149/150$ records for
+A/B/C/native; human-edit rows contain $n=128/150/149/50$.
+``Human edit'' applies each essay's gold annotator corrections---no model
+involved. Values are synchronized with \texttt{results/FAIRNESS.md}.}
 \label{tab:cefr}
 \end{table}
 
-Three aspects of Table~\ref{tab:cefr} matter. First, the effect
-\emph{reproduces under gold human corrections}: this is not an artifact of
-CoEdIT's output distribution; genuinely edited learner text triggers false
-accusations. Second, the burden is population-specific: natives are untouched.
-Third, bias \emph{shape} is mechanism-specific: RoBERTa peaks at intermediate
-proficiency while our DeBERTa fine-tune's FAR rises with proficiency
-(0\%$\to$8.1\%, A$\to$C)---two supervised detectors, opposite gradients.
-First-language disparities exist within learners as well: under grammar
-correction, Japanese-L1 essays are flagged at 9.4--11.7\% (perplexity/RoBERTa)
-against 0.6\% for Thai-L1 ($n{=}180$/164), with per-country cells carrying
-$\pm$3--5pp CIs.
+Three aspects of Table~\ref{tab:cefr} matter. First, gold human corrections can
+also move FAR, so the phenomenon is not limited to CoEdIT outputs. Second, the
+pattern is neither monotonic in proficiency nor confined to non-native writers;
+the native comparison group has the largest grammar-corrected FAR for both
+perplexity and RoBERTa. Third, the shape is detector-specific: Binoculars rises
+under gold editing for all learner bands, while other detectors move in
+different directions. Region-level ICNALE slices are similarly heterogeneous:
+Japanese-L1 essays reach 9.4\%/11.7\% under perplexity/RoBERTa, but other learner
+cells range from zero to 13.4\%. These descriptive cells require uncertainty
+estimates and a confirmatory protocol before strong group-level conclusions.
 
-\subsection{The register twist: predictability, not nativeness}
+\subsection{Register and predictability complicate native-status comparisons}
 \label{sec:register}
 
-On ICNALE's topic-controlled opinion essays the pattern \emph{inverts}:
+On ICNALE's topic-controlled opinion essays the pattern changes:
 native-speaker reference essays (ENS) are flagged \emph{most} (RoBERTa:
 9\%$\to$19\% under grammar correction; perplexity: 11\%$\to$17\%), exceeding
-every learner group in the same corpus. Figure~\ref{fig:register} shows why:
+every learner group in the same corpus. Figure~\ref{fig:register} suggests one
+possible explanation:
 by median GPT-2 negative log-likelihood, ICNALE's \emph{native} prompt essays
 (2.81) sit closer to ChatGPT text (2.18) than any learner group does---closer
 even than the non-native TOEFL essays (3.11)---while open-register human
-writing is furthest (3.59). This reconciles the TOEFL/W\&I and ICNALE results
-under a register account consistent with \citet{liang2023gpt}'s
-perplexity-mediation evidence: detectors penalize \emph{statistically
-predictable} text. Limited L2 vocabulary lowers perplexity; so does fluent
-native prose written to a short, formulaic prompt. Who bears the
-false-accusation burden is therefore a property of the writing task---an
-uncomfortable conclusion for the highest-stakes deployment, education, where
-formulaic prompts are the norm.
+writing is furthest (3.59). This pattern is consistent with
+\citet{liang2023gpt}'s perplexity-mediation evidence and motivates a register
+account: both limited-vocabulary learner writing and fluent native prose written
+to a short, formulaic prompt can be statistically predictable. The present
+analysis is descriptive, however; it does not isolate register from corpus,
+prompt, or other population differences.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/perplexity_by_corpus.pdf}
+\includegraphics[width=0.96\linewidth]{figures/perplexity_by_corpus.pdf}
 \caption{GPT-2 mean token negative log-likelihood by corpus group (boxes:
-IQR; whiskers: 5th--95th percentile). Predictability, not nativeness,
-determines proximity to the machine-text region: native writers of
-topic-controlled prompt essays are \emph{more} machine-like than non-native
-TOEFL writers.}
+IQR; whiskers: 5th--95th percentile). In these descriptive samples, native
+writers of topic-controlled prompt essays have lower median NLL than
+non-native TOEFL writers. Corpus and register are confounded, so this figure
+does not establish a causal mediation effect.}
 \label{fig:register}
 \end{figure}
+\FloatBarrier
 
 \subsection{Quality-adjusted evasion and composition}
 \label{sec:qaes}
@@ -350,7 +377,7 @@ Composed pipelines are the worst case for every detector
 82\% of depth-2 \texttt{launder\_lite} outputs retain embedding similarity
 $\geq 0.85$ to the original, against 94--96\% for single transforms, and
 \qaes{} discounts evasion accordingly (e.g., perplexity under
-\texttt{launder\_lite}: raw evasion 54.0\% vs.\ \qaes{} 50.4\%). The
+\texttt{launder\_lite}: raw evasion 70.0\% vs.\ \qaes{} 67.5\%). The
 correction is modest on our conditions---by design, since our transforms
 target meaning preservation---but the machinery matters for attack papers
 whose raw success rates conflate evading the detector with destroying the
@@ -366,7 +393,8 @@ readability normality, lexical diversity \citep{mccarthy2010mtld}, semantic
 consistency under paraphrase, leave-one-out committee margin), fit on a
 transformed condition and frozen. The resulting HCI is positive and monotone
 for likelihood-based detectors (Binoculars: 0.15; accuracy falls
-97\%$\to$91\% across quintiles under paraphrase) but \emph{negative} for
+94\%$\to$80\% from the easiest to hardest quintile under paraphrase) but
+\emph{negative} for
 surface classifiers (RoBERTa $-0.04$; TF-IDF $-0.02$): examples our score
 calls hard are where those detectors do \emph{better}. Difficulty, as commonly
 operationalized through likelihood-adjacent signals, is not a property of the
@@ -384,9 +412,10 @@ $<$1pp---surface classifiers are hostage to calibration-pool composition in a
 way likelihood detectors are not. Per-domain calibration
 (Table~\ref{tab:leaderboard}, following \citealp{dugan2024raid}) removes the
 artifact: every detector then realizes 0.7--0.8\% clean FPR and recovers its
-in-register TPR. Deployed systems calibrated on convenience corpora inherit
-the pooled regime's sensitivity; we therefore report both regimes and
-recommend per-register calibration as deployment practice.
+in-register TPR. Because each per-domain threshold is estimated from the same
+clean domain slice used to report clean FPR, this is a sensitivity analysis,
+not evidence of held-out deployment performance. The contrast motivates a
+confirmatory run with separate, register-aware calibration data.
 
 \section{Limitations}
 \label{sec:limitations}
@@ -398,19 +427,25 @@ partly reflect in-domain training; the OOD-generator slice must gate any
 general claim. (3) Binoculars-lite uses a small model pair, not the original
 Falcon-7B pair. (4) Semantic preservation is embedding-scored; the human
 validation round (planned, $\sim$600 stratified pairs, 3 annotators) has not
-yet run, so \qaes{} thresholds are provisional. (5) Single seed for the
-fine-tune; per-country fairness cells are $n \leq 180$ with wide CIs.
-(6) All experiments ran on one consumer GPU; scale is bounded accordingly.
+yet run, so \qaes{} thresholds are provisional. (5) Thresholds in the current
+result set are estimated from clean human records in the evaluation pool; a
+separate calibration split is required for final operating-point estimates.
+(6) Single seed for the fine-tune; per-country fairness cells are $n \leq 180$
+and the public slice table does not yet include confidence intervals.
+(7) All experiments ran on one consumer GPU; scale is bounded accordingly.
+(8) Licensed corpora, model weights, and per-example score caches are not
+distributed in this repository; only code, data recipes, and generated summary
+artifacts are committed.
 
 \section{Conclusion}
-Reliability, not clean accuracy, is the quantity deployment depends on---and
-the two rank detectors in nearly opposite orders. Evaluated symmetrically at
-deployed thresholds, benign transformations of human writing produce
-concentrated false-accusation harms that threshold-free evaluation
-structurally cannot see, and those harms track text predictability rather
-than writer identity. We release \stresstest{} in full---code, data recipes,
-caches, and per-detector reliability cards---as infrastructure for evaluating
-the next generation of detectors on the questions that matter.
+Reliability, not clean accuracy alone, is the quantity deployment depends on,
+and the two can rank detectors differently. Evaluated symmetrically at a fixed
+threshold, benign transformations of human writing can produce
+false-accusation movement that threshold-free evaluation cannot localize. The
+present slices associate that movement with writing register and predictability,
+but do not support causal claims about writer identity. We release the
+\stresstest{} code, data recipes, generated summary artifacts, and validation
+materials as a transparent foundation for the next confirmatory evaluation.
 
 \bibliographystyle{plainnat}
 \bibliography{references}

@@ -1,5 +1,7 @@
 # Fairness Analysis: Native vs Non-Native False-Accusation Rate
 
+> **Interpretation note.** Exploratory subgroup analysis. Thresholds are estimated from clean human records in the evaluation pool, and subgroup sample sizes vary. These results do not establish causal effects of language background.
+
 *Liang et al. (Patterns 2023) found 61.22% FPR on clean non-native TOEFL essays with commercial detectors. n_native=308, n_non_native=2263.*
 
 | Detector | Condition | Native FAR [95% CI] (n) | Non-native FAR [95% CI] (n) | Gap |
